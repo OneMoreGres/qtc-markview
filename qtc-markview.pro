@@ -4,15 +4,25 @@ VERSION_SUFFIX = ""
 
 include(paths.pri)
 
+QT += webkitwidgets
+
 # QtcMarkview files
 
 SOURCES += \
-    src/QtcMarkviewPlugin.cpp
+    src/QtcMarkviewPlugin.cpp \
+    src/MarkviewEditorFactory.cpp \
+    src/AdapterBase.cpp \
+    src/AdapterMarkdown.cpp \
+    src/MarkviewWidget.cpp
 
 HEADERS += \
     src/Constants.h \
     src/PluginGlobal.h \
-    src/QtcMarkviewPlugin.h
+    src/QtcMarkviewPlugin.h \
+    src/MarkviewEditorFactory.h \
+    src/AdapterBase.h \
+    src/AdapterMarkdown.h \
+    src/MarkviewWidget.h
 
 TRANSLATIONS += \
     translation/QtcMarkview_ru.ts
@@ -33,7 +43,8 @@ QTC_LIB_DEPENDS += \
     # nothing here at this time
 
 QTC_PLUGIN_DEPENDS += \
-    coreplugin
+    coreplugin \
+    texteditor
 
 QTC_PLUGIN_RECOMMENDS += \
     # optional plugin dependencies. nothing here at this time

@@ -1,5 +1,8 @@
 #include "QtcMarkviewPlugin.h"
 #include "Constants.h"
+#include "MarkviewEditorFactory.h"
+
+#include <QCoreApplication>
 
 #include <QtPlugin>
 
@@ -25,6 +28,8 @@ bool QtcMarkviewPlugin::initialize (const QStringList &arguments, QString *error
 
   Q_UNUSED (arguments)
   Q_UNUSED (errorString)
+
+  addAutoReleasedObject (new MarkviewEditorFactory);
 
   return true;
 }
