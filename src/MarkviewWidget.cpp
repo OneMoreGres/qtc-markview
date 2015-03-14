@@ -3,12 +3,17 @@
 
 #include <QComboBox>
 #include <QWebView>
+#include <QWebSettings>
 #include <QVBoxLayout>
 
 using namespace QtcMarkview::Internal;
 
 MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   : webView_ (nullptr), adapters_ (adapters), currentAdapter_ (nullptr) {
+
+#ifdef QT_DEBUG
+  QWebSettings::globalSettings ()->setAttribute (QWebSettings::DeveloperExtrasEnabled, true);
+#endif
 
   QComboBox *adapterCombo = new QComboBox (this);
   adapterCombo->addItems (adapters_.keys ());
@@ -27,19 +32,24 @@ void MarkviewWidget::finalizeInitialization () {
 
   Q_ASSERT (textDocument ());
   connect (textDocument (), &TextEditor::TextDocument::contentsChanged,
-           this, &MarkviewWidget::reload);
+           this, &MarkviewWidget::update);
 }
 
 void MarkviewWidget::currentAdapterChanged (const QString &newAdapterName) {
   currentAdapter_ = adapters_.value (newAdapterName, nullptr);
   changeView ();
-  reload ();
+  init ();
 }
 
 void MarkviewWidget::changeView () {
   // Create webView and place on top of base editor (not viewport).
   if (currentAdapter_ && !webView_) {
     webView_ = new QWebView (this);
+    QNetworkAccessManager *networkManager = webView_->page ()->networkAccessManager ();
+    networkManager->setNetworkAccessible (QNetworkAccessManager::NotAccessible);
+#ifndef QT_DEBUG
+    webView_->setContextMenuPolicy (Qt::NoContextMenu);
+#endif
     QVBoxLayout *layout = new QVBoxLayout (this);
     layout->setMargin (0);
     layout->addWidget (webView_);
@@ -59,10 +69,18 @@ void MarkviewWidget::changeView () {
   }
 }
 
-void MarkviewWidget::reload () {
+void MarkviewWidget::init () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    webView_->setHtml (currentAdapter_->toHtml (textDocument ()->plainText ()));
+    currentAdapter_->initViev (textDocument ()->plainText (), webView_);
+  }
+}
+
+void MarkviewWidget::update () {
+  if (currentAdapter_) {
+    Q_ASSERT (webView_);
+    Q_ASSERT (textDocument ());
+    currentAdapter_->updateView (textDocument ()->plainText (), webView_);
   }
 }

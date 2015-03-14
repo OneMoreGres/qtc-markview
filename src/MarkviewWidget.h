@@ -23,7 +23,8 @@ namespace QtcMarkview {
       private slots:
         void currentAdapterChanged (const QString &newAdapterName);
         void changeView ();
-        void reload ();
+        void init ();
+        void update ();
 
       private:
         QWebView *webView_;

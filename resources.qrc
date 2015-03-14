@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>js/markdown.js</file>
+        <file>js/require.js</file>
+        <file>html/markdown.html</file>
+        <file>help/markdown.md</file>
+    </qresource>
+</RCC>

@@ -12,7 +12,6 @@ SOURCES += \
     src/QtcMarkviewPlugin.cpp \
     src/MarkviewEditorFactory.cpp \
     src/AdapterBase.cpp \
-    src/AdapterMarkdown.cpp \
     src/MarkviewWidget.cpp
 
 HEADERS += \
@@ -21,7 +20,6 @@ HEADERS += \
     src/QtcMarkviewPlugin.h \
     src/MarkviewEditorFactory.h \
     src/AdapterBase.h \
-    src/AdapterMarkdown.h \
     src/MarkviewWidget.h
 
 TRANSLATIONS += \
@@ -52,4 +50,7 @@ QTC_PLUGIN_RECOMMENDS += \
 ###### End _dependencies.pri contents ######
 
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
+
+RESOURCES += \
+    resources.qrc
 

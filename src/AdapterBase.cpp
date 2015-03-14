@@ -1,8 +1,40 @@
 #include "AdapterBase.h"
 
+#include <QFile>
+#include <QDebug>
+#include <QWebView>
+#include <QWebFrame>
+
 using namespace QtcMarkview::Internal;
 
-AdapterBase::AdapterBase () {
+namespace {
+
+  QByteArray readFile (const QString &name) {
+    QFile f (name);
+    QByteArray result;
+    if (f.open (QFile::ReadOnly)) {
+      result = f.readAll ();
+      f.close ();
+    }
+    else {
+      qCritical () << "Error opening file" << name;
+    }
+    return result;
+  }
+
+  //! Prepare string to be passed to js script.
+  QString toJsString (const QString &source) {
+    QString result = source;
+    result = result
+             .replace (QStringLiteral ("\n"), QStringLiteral ("\\n")) // support multiline
+             .replace (QStringLiteral ("\""), QStringLiteral ("\\\"")); // support internal quotes
+    return QStringLiteral ("\"") + result + QStringLiteral ("\"");
+  }
+
+}
+
+AdapterBase::AdapterBase (const QString helpFileName, const QString htmlFileName)
+  : helpFileName_ (helpFileName), htmlFileName_ (htmlFileName) {
 
 }
 
@@ -10,10 +42,38 @@ AdapterBase::~AdapterBase () {
 
 }
 
-const QString &AdapterBase::helpMessage () const {
-  return helpMessage_;
+void AdapterBase::initViev (const QString &plainText, QWebView *view) const {
+  QString html;
+  if (htmlFileName_.isEmpty ()) {
+    html = plainText.toHtmlEscaped ();
+  }
+  else {
+    html = QString::fromLocal8Bit (readFile (htmlFileName_.toHtmlEscaped ()));
+    html = html.arg (toJsString (plainText));
+  }
+  view->setHtml (html);
+}
+
+void AdapterBase::updateView (const QString &plainText, QWebView *view) const {
+  if (htmlFileName_.isEmpty ()) {
+    view->setHtml (plainText);
+  }
+  else {
+    QString preprocessed = toJsString (plainText);
+    QString updateScript = QString (QStringLiteral ("update (%1);")).arg (preprocessed);
+    QWebFrame *mainFrame = view->page ()->mainFrame ();
+    mainFrame->evaluateJavaScript (updateScript);
+  }
+}
+
+QString AdapterBase::helpMessage () const {
+  QString message;
+  if (!helpFileName_.isEmpty ()) {
+    message = QString::fromLocal8Bit (readFile (helpFileName_));
+  }
+  return message;
 }
 
 bool AdapterBase::isHelpAvailable () const {
-  return !helpMessage_.isEmpty ();
+  return !helpFileName_.isEmpty ();
 }

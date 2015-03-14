@@ -1,7 +1,7 @@
 #include "MarkviewEditorFactory.h"
 #include "Constants.h"
 #include "MarkviewWidget.h"
-#include "AdapterMarkdown.h"
+#include "AdapterBase.h"
 
 #include <QCoreApplication>
 
@@ -15,11 +15,13 @@ namespace {
 
 MarkviewEditorFactory::MarkviewEditorFactory () {
   setId (Constants::QTCMARKVIEW_ID);
-  setDisplayName (QCoreApplication::translate ("OpenWith::Editors", Constants::QTCMARKVIEW_DISPLAY_NAME));
+  setDisplayName (QCoreApplication::translate ("OpenWith::Editors",
+                                               Constants::QTCMARKVIEW_DISPLAY_NAME));
   addMimeType ("text/plain");
 
   adapters.insert (tr ("Plain"), nullptr);
-  adapters.insert (tr ("Markdown"), new AdapterMarkdown);
+  adapters.insert (tr ("Markdown"), new AdapterBase (QStringLiteral (":/help/markdown.md"),
+                                                     QStringLiteral (":/html/markdown.html")));
 
   setDocumentCreator ([]() {
     return new TextEditor::TextDocument (Constants::QTCMARKVIEW_ID);

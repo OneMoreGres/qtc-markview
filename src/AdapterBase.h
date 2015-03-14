@@ -3,21 +3,26 @@
 
 #include <QString>
 
+class QWebView;
+
 namespace QtcMarkview {
   namespace Internal {
 
     class AdapterBase {
       public:
-        AdapterBase ();
+        AdapterBase (const QString helpFileName = QString (),
+                     const QString htmlFileName = QString ());
         virtual ~AdapterBase ();
 
-        virtual QString toHtml (const QString &plainText) const = 0;
+        virtual void initViev (const QString &plainText, QWebView *view) const;
+        virtual void updateView (const QString &plainText, QWebView *view) const;
 
-        const QString &helpMessage () const;
+        QString helpMessage () const;
         bool isHelpAvailable () const;
 
       protected:
-        QString helpMessage_;
+        QString helpFileName_;
+        QString htmlFileName_;
     };
 
   } // namespace Internal
