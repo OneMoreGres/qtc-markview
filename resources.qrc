@@ -5,5 +5,9 @@
         <file>html/markdown.html</file>
         <file>help/markdown.md</file>
         <file>icons/question1.png</file>
+        <file>js/asciidoctor-all.js</file>
+        <file>css/asciidoctor.css</file>
+        <file>help/asciidoctor.adoc</file>
+        <file>html/asciidoctor.html</file>
     </qresource>
 </RCC>

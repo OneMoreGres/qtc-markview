@@ -22,6 +22,8 @@ MarkviewEditorFactory::MarkviewEditorFactory () {
   adapters.insert (tr ("Plain"), nullptr);
   adapters.insert (tr ("Markdown"), new AdapterBase (QStringLiteral (":/help/markdown.md"),
                                                      QStringLiteral (":/html/markdown.html")));
+  adapters.insert (tr ("Asciidoctor"), new AdapterBase (QStringLiteral (":/help/asciidoctor.adoc"),
+                                                        QStringLiteral (":/html/asciidoctor.html")));
 
   setDocumentCreator ([]() {
     return new TextEditor::TextDocument (Constants::QTCMARKVIEW_ID);

@@ -1,0 +1,14 @@
+<head>
+<link rel="stylesheet" href="qrc:/css/asciidoctor.css">
+<script src="qrc:/js/asciidoctor-all.js"></script>
+<script>
+function update (plainText) {
+  var options = Opal.hash2(['attributes'], {attributes: ['showtitle']});
+  var html = Opal.Asciidoctor.$convert(plainText, options);
+  document.body.innerHTML = html;
+}
+</script>
+</head>
+<body onload="init()">
+<script>function init () {update(%1);}</script>
+</body>
