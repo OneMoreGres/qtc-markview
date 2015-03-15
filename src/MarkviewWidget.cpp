@@ -73,7 +73,7 @@ void MarkviewWidget::init () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    currentAdapter_->initViev (textDocument ()->plainText (), webView_);
+    currentAdapter_->initView (textDocument ()->plainText (), webView_);
   }
 }
 

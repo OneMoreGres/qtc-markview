@@ -42,7 +42,7 @@ AdapterBase::~AdapterBase () {
 
 }
 
-void AdapterBase::initViev (const QString &plainText, QWebView *view) const {
+void AdapterBase::initView (const QString &plainText, QWebView *view) const {
   QString html;
   if (htmlFileName_.isEmpty ()) {
     html = plainText.toHtmlEscaped ();
