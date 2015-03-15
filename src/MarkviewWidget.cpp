@@ -48,6 +48,7 @@ void MarkviewWidget::finalizeInitialization () {
 void MarkviewWidget::currentAdapterChanged (const QString &newAdapterName) {
   currentAdapter_ = adapters_.value (newAdapterName, nullptr);
   emit helpAvailabilityChanged (currentAdapter_ && currentAdapter_->isHelpAvailable ());
+  currentAdapterName_ = newAdapterName;
   changeView ();
   init ();
 }
@@ -102,7 +103,7 @@ void MarkviewWidget::showHelp () {
     return;
   }
   QString helpText = currentAdapter_->helpMessage ();
-  QString titlePattern (QStringLiteral ("Format help"));
+  QString titlePattern = QString (QStringLiteral ("%1 help")).arg (currentAdapterName_);
   Core::EditorManager::openEditorWithContents (Constants::QTCMARKVIEW_ID, &titlePattern,
                                                helpText.toUtf8 ());
 }

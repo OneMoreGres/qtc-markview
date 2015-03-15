@@ -35,6 +35,7 @@ namespace QtcMarkview {
 
         const Adapters &adapters_;
         const AdapterBase *currentAdapter_;
+        QString currentAdapterName_;
 
     };
 
