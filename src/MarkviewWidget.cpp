@@ -45,6 +45,7 @@ void MarkviewWidget::changeView () {
   // Create webView and place on top of base editor (not viewport).
   if (currentAdapter_ && !webView_) {
     webView_ = new QWebView (this);
+    webView_->setStyleSheet (QStringLiteral ("QWebView {background: #FFFFFF;}"));
     QNetworkAccessManager *networkManager = webView_->page ()->networkAccessManager ();
     networkManager->setNetworkAccessible (QNetworkAccessManager::NotAccessible);
 #ifndef QT_DEBUG
