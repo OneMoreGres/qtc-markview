@@ -1,12 +1,15 @@
 #include "MarkviewWidget.h"
 #include "AdapterBase.h"
 #include "Constants.h"
+#include "WebViewFind.h"
 
 #include <QComboBox>
 #include <QWebView>
 #include <QWebSettings>
 #include <QVBoxLayout>
 #include <QToolButton>
+
+#include <aggregation/aggregate.h>
 
 using namespace QtcMarkview::Internal;
 
@@ -68,6 +71,12 @@ void MarkviewWidget::changeView () {
     QVBoxLayout *layout = new QVBoxLayout (this);
     layout->setMargin (0);
     layout->addWidget (webView_);
+
+    // Search support
+    Aggregation::Aggregate *aggregate = new Aggregation::Aggregate;
+    WebViewFind *webViewFind = new WebViewFind (webView_);
+    aggregate->add (webViewFind);
+    aggregate->add (webView_);
   }
 
   if (currentAdapter_) {
