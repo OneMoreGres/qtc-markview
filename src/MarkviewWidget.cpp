@@ -25,7 +25,9 @@ MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   insertExtraToolBarWidget (Left, helpButton);
 
   QComboBox *adapterCombo = new QComboBox (this);
-  adapterCombo->addItems (adapters_.keys ());
+  QStringList adapterNames = adapters_.keys ();
+  adapterNames.sort ();
+  adapterCombo->addItems (adapterNames);
   QString plainName = adapters_.key (nullptr);
   adapterCombo->setCurrentText (plainName); // required if plain is not first
   currentAdapterChanged (plainName);
