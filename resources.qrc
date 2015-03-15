@@ -4,5 +4,6 @@
         <file>js/require.js</file>
         <file>html/markdown.html</file>
         <file>help/markdown.md</file>
+        <file>icons/question1.png</file>
     </qresource>
 </RCC>
