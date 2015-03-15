@@ -20,17 +20,22 @@ namespace QtcMarkview {
 
         void finalizeInitialization ();
 
+      signals:
+        void helpAvailabilityChanged (bool gotHelp);
+
       private slots:
         void currentAdapterChanged (const QString &newAdapterName);
         void changeView ();
         void init ();
         void update ();
+        void showHelp ();
 
       private:
         QWebView *webView_;
 
         const Adapters &adapters_;
         const AdapterBase *currentAdapter_;
+        QString currentAdapterName_;
 
     };
 

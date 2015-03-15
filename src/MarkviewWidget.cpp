@@ -1,10 +1,12 @@
 #include "MarkviewWidget.h"
 #include "AdapterBase.h"
+#include "Constants.h"
 
 #include <QComboBox>
 #include <QWebView>
 #include <QWebSettings>
 #include <QVBoxLayout>
+#include <QToolButton>
 
 using namespace QtcMarkview::Internal;
 
@@ -15,12 +17,20 @@ MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   QWebSettings::globalSettings ()->setAttribute (QWebSettings::DeveloperExtrasEnabled, true);
 #endif
 
+  QToolButton *helpButton = new QToolButton (this);
+  helpButton->setIcon (QIcon (QStringLiteral (":icons/question1.png")));
+  helpButton->setToolTip (QStringLiteral ("Show format help"));
+  connect (helpButton, &QToolButton::clicked, this, &MarkviewWidget::showHelp);
+  connect (this, &MarkviewWidget::helpAvailabilityChanged, helpButton, &QToolButton::setEnabled);
+  insertExtraToolBarWidget (Left, helpButton);
+
   QComboBox *adapterCombo = new QComboBox (this);
   adapterCombo->addItems (adapters_.keys ());
-  adapterCombo->setCurrentText (adapters_.key (nullptr));
+  QString plainName = adapters_.key (nullptr);
+  adapterCombo->setCurrentText (plainName); // required if plain is not first
+  currentAdapterChanged (plainName);
   connect (adapterCombo, &QComboBox::currentTextChanged, this, &MarkviewWidget::currentAdapterChanged);
   insertExtraToolBarWidget (Left, adapterCombo);
-  //TODO show help
 }
 
 MarkviewWidget::~MarkviewWidget () {
@@ -37,6 +47,8 @@ void MarkviewWidget::finalizeInitialization () {
 
 void MarkviewWidget::currentAdapterChanged (const QString &newAdapterName) {
   currentAdapter_ = adapters_.value (newAdapterName, nullptr);
+  emit helpAvailabilityChanged (currentAdapter_ && currentAdapter_->isHelpAvailable ());
+  currentAdapterName_ = newAdapterName;
   changeView ();
   init ();
 }
@@ -84,4 +96,14 @@ void MarkviewWidget::update () {
     Q_ASSERT (textDocument ());
     currentAdapter_->updateView (textDocument ()->plainText (), webView_);
   }
+}
+
+void MarkviewWidget::showHelp () {
+  if (!currentAdapter_ || !currentAdapter_->isHelpAvailable ()) {
+    return;
+  }
+  QString helpText = currentAdapter_->helpMessage ();
+  QString titlePattern = QString (QStringLiteral ("%1 help")).arg (currentAdapterName_);
+  Core::EditorManager::openEditorWithContents (Constants::QTCMARKVIEW_ID, &titlePattern,
+                                               helpText.toUtf8 ());
 }
