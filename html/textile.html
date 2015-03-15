@@ -1,0 +1,9 @@
+<script src="qrc:/js/textile.js"></script>
+<script>
+function update (plainText) {
+  document.body.innerHTML = textile(plainText);
+}
+</script>
+<body onload="init()">
+<script>function init () {update(%1);}</script>
+</body>

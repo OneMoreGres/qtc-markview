@@ -9,5 +9,8 @@
         <file>css/asciidoctor.css</file>
         <file>help/asciidoctor.adoc</file>
         <file>html/asciidoctor.html</file>
+        <file>html/textile.html</file>
+        <file>help/textile.textile</file>
+        <file>js/textile.js</file>
     </qresource>
 </RCC>

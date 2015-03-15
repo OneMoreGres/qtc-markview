@@ -24,6 +24,8 @@ MarkviewEditorFactory::MarkviewEditorFactory () {
                                                      QStringLiteral (":/html/markdown.html")));
   adapters.insert (tr ("Asciidoctor"), new AdapterBase (QStringLiteral (":/help/asciidoctor.adoc"),
                                                         QStringLiteral (":/html/asciidoctor.html")));
+  adapters.insert (tr ("Textile"), new AdapterBase (QStringLiteral (":/help/textile.textile"),
+                                                    QStringLiteral (":/html/textile.html")));
 
   setDocumentCreator ([]() {
     return new TextEditor::TextDocument (Constants::QTCMARKVIEW_ID);
