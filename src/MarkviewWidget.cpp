@@ -21,11 +21,14 @@ MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   helpButton->setIcon (QIcon (QStringLiteral (":icons/question1.png")));
   helpButton->setToolTip (QStringLiteral ("Show format help"));
   connect (helpButton, &QToolButton::clicked, this, &MarkviewWidget::showHelp);
+  connect (this, &MarkviewWidget::helpAvailabilityChanged, helpButton, &QToolButton::setEnabled);
   insertExtraToolBarWidget (Left, helpButton);
 
   QComboBox *adapterCombo = new QComboBox (this);
   adapterCombo->addItems (adapters_.keys ());
-  adapterCombo->setCurrentText (adapters_.key (nullptr));
+  QString plainName = adapters_.key (nullptr);
+  adapterCombo->setCurrentText (plainName); // required if plain is not first
+  currentAdapterChanged (plainName);
   connect (adapterCombo, &QComboBox::currentTextChanged, this, &MarkviewWidget::currentAdapterChanged);
   insertExtraToolBarWidget (Left, adapterCombo);
 }
@@ -44,6 +47,7 @@ void MarkviewWidget::finalizeInitialization () {
 
 void MarkviewWidget::currentAdapterChanged (const QString &newAdapterName) {
   currentAdapter_ = adapters_.value (newAdapterName, nullptr);
+  emit helpAvailabilityChanged (currentAdapter_ && currentAdapter_->isHelpAvailable ());
   changeView ();
   init ();
 }

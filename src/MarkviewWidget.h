@@ -20,6 +20,9 @@ namespace QtcMarkview {
 
         void finalizeInitialization ();
 
+      signals:
+        void helpAvailabilityChanged (bool gotHelp);
+
       private slots:
         void currentAdapterChanged (const QString &newAdapterName);
         void changeView ();
