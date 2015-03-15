@@ -1,0 +1,128 @@
+
+<p>This page is having a quick review of all the HTML tags discussed in this tutorial. If you need to know in detail about any tag then refer to HTML Tag List chapter.</p>
+<h1>HTML Basic Syntax:</h1>
+<ul>
+<li><p>HTML Element names and attribute names are not case sensitive.</p></li>
+<li><p>HTML Documents start with a &lt;!doctype...&gt; statement, followed by a <i>header</i>  and a text body all enclosed in &lt;html&gt;...&lt;/html&gt;.</p></li>
+<li><p>HTML Header is enclosed in &lt;head&gt;....&lt;/head&gt; tags.</p></li>
+<li><p>HTML Body is enclosed in &lt;body&gt;....&lt;/body&gt; tags.</p></li>
+<li><p>HTML Comments are written as &lt;!-- A comment --&gt;.</p></li>
+</ul>
+<h1>HTML Basic Document:</h1>
+<table class="src" cellpadding="5"><tr><td><pre>
+&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 4.0//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Document Title like HTML Tutorial&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+   Document Text with other tags will come here.
+&lt;/body&gt;
+
+&lt;/html&gt;
+</pre></td></tr></table>
+<h1>Header elements:</h1>
+<ul>
+<li><p><b>&lt;head&gt;</b> - Opening tag for the head of the document. The following optional tags can be placed inside the head.</p></li>
+<li><p><b>&lt;title&gt;...&lt;/title&gt;</b> -Document title (not part of the text), recommended maximum length 64 characters.</p></li>
+<li><p><b>&lt;link ...&gt; </b> - Relationships for the document as a whole: common attributes are rel, rev, href.</p></li>
+<li><p><b>&lt;base href="url"&gt; </b> - Specifies the base URL of the document. This is used when dereferencing relative URLs in the page.</p></li>
+<li><p><b>&lt;base href="url" target="..."&gt; </b> - Specifies the base URL of the document. This is used when dereferencing relative URLs in the page. Also specifies the base target frame that all links will default to.</p></li>
+<li><p><b>&lt;meta ...&gt; </b> - Embed meta-information as if given by the server: attributes http-equiv, name, content.<br/>
+&lt;meta http-equiv="refresh" content="N" &gt; - Same page will be reloaded automatically after N seconds.<br/>
+&lt;meta http-equiv="refresh" content="N" url="http://www.example.com&gt; - Same other page will refresh automatically after N seconds.<br/>
+&lt;meta http-equiv="expires" content="Wed, 08 Aug 2007 01:21:00 GMT" &gt; - Specifies an expiration date for the page so that it will be reloaded after a certain date.<br/>
+&lt;meta http-equiv="keywords" content="keyword1, keyword2,..." &gt; - Specifies various keywords available on the page and to be used by the search engine.<br/>
+&lt;meta http-equiv="description" content="A short description of the site" &gt; - Specifies small description of the page and to be used by the search engine.<br/>
+</p></li>
+<li><p><b>&lt;style type="text/css" href="URL" /&gt;</b> - Specifies a CSS file to be used for the web page.</p></li>
+<li><p><b>&lt;script type="text/scripttype" href="URL" /&gt;</b> - Specifies a Javascript of VBscript file to be used for the web page.</p></li>
+<li><p><b>&lt;noscript&gt; ... &lt;/noscript&gt; </b> - Encloses anything you want displayed by browsers that do not support inline scripts. This goes inside the &lt;script&gt; tags.</p></li>
+<li><p><b>&lt;/head&gt;</b> - Closing tag for the head of the document.</p></li>
+</ul>
+<h1>Body Elements:</h1>
+<ul>
+<li><p><b>&lt;body&gt;...&lt;/body&gt; </b> - Encloses the main body of the document.</p></li>
+<li><p><b>&lt;hn&gt;...&lt;/hn&gt;</b> - Makes the enclosed text a heading of various sizes where n is any number ranging from 1 to 6, and 1 creates the biggest heading while 6 creates the smallest.</p></li>
+<li><p><b>&lt;basefont size="n"&gt;</b> - Sets the default font properties for the entire page.</p></li>
+<li><p><b>&lt;isindex attributes&gt;</b> - Displays a text box indicating the presence of a searchable index. Simply adding this tag will not create a searchable page. The server must be set up to support it.</p></li>
+<li><p><b>&lt;img src="URL" attributes&gt;</b> - Places an inline image into the document.</p></li>
+<li><p><b>&lt;map attributes&gt;...&lt;/map&gt;</b> - Specifies a collection of hot spots that define a client-side image map. The &lt;area&gt; tag can be used inside to define the hot spots.</p></li>
+<li><p><b>&lt;area attributes&gt;...&lt;/area&gt;</b> - Specifies the shape and size of a hot spot to be used in the definition of a client-side image map. Used inside the &lt;map&gt; tag.</p></li>
+<li><p><b>&lt;marquee attributes&gt;...&lt;/marquee&gt;</b> - Places a scrolling text marquee into the document.</p></li>
+<li><p><b>&lt;applet attributes&gt;...&lt;/applet&gt;</b> - Inserts a Java applet in the HTML document. Any text placed between the opening and closing &lt;applet&gt; tags will be displayed by browsers that do not support JAVA.</p></li>
+<li><p><b>&lt;embed attributes&gt;...&lt;/embed&gt;</b> - Inserts an embedded multimedia object, such as a sound file or video, into the page.</p></li>
+<li><p><b>&lt;a href="..."&gt;...&lt;/a&gt;</b> - When used with the HREF attribute, the enclosed text and/or graphic becomes a link to another document or anchor. When used with the NAME attribute, the enclosed text and/or graphic becomes an anchor.</p></li>
+<li><p><b>&lt;ol attributes&gt;...&lt;/ol&gt;</b> - Puts the enclosed items marked with &lt;li&gt;, in a numbered list.</p></li>
+<li><p><b>&lt;ul attributes&gt;...&lt;/ul&gt;</b> - Puts the enclosed items marked with &lt;li&gt;, in a bulleted  list.</p></li>
+<li><p><b>&lt;dl&gt;...&lt;/dl&gt;</b> - Creates a definition list. Within this container, &lt;dt&gt; specifies a definition term and &lt;dd&gt; specifies the definition.</p></li>
+</ul>
+<h1>Frame Elements:</h1>
+<ul>
+<li><p><b>&lt;frameset attributes&gt;...&lt;/frameset&gt; </b> - Defines a set of frames that will make up the page. The &lt;frame&gt;, and &lt;noframes&gt; tags go inside this. The &lt;frameset&gt; tag is used instead of the &lt;body&gt; tag. You can, however, include a &lt;body&gt; tag inside the &lt;noframes&gt; tags for browsers that do not support frames.</p></li>
+<li><p><b>&lt;frame attributes /&gt; </b> - Defines a single frame within a frameset.</p></li>
+<li><p><b>&lt;iframe attributes&gt;...&lt;/iframe&gt;  </b> - Defines a floating frame. Does not need to be placed within a frameset.</p></li>
+<li><p><b>&lt;noframes&gt;...&lt;/noframes&gt;  </b> - Placed inside the &lt;frameset&gt;, anything between the beginning and ending of this tag is viewable only by browsers that do not support frames. This tag is used to create pages that are compatible with older browsers that do not support frames. </p></li>
+</ul>
+<h1>Table Elements:</h1>
+<ul>
+<li><p><b>&lt;table attributes&gt;...&lt;/table&gt; </b> -Creates a table that can include any number of rows.</p></li>
+<li><p><b>&lt;caption attributes&gt;...&lt;/caption&gt; </b> -Specifies the caption of the table.</p></li>
+<li><p><b>&lt;tr attributes&gt;...&lt;/tr&gt; </b> - Specifies a table row. It can enclose the table heading and table data.</p></li>
+<li><p><b>&lt;th attributes&gt;...&lt;/th&gt; </b> - Specifies a table heading.</p></li>
+<li><p><b>&lt;td attributes&gt;...&lt;/td&gt; </b> - Specifies a table data cell.</p></li>
+<li><p><b>&lt;colgroup attributes /&gt;</b> - Specifies the properties of one or more columns. This tag generally goes right after the opening &lt;table&gt; tag.</p></li>
+<li><p><b>&lt;col attributes /&gt;</b> - Used with the &lt;colgroup&gt; tag, this specifies the properties of one column. This tag overrides any attributes specified in the &lt;colgroup&gt; tag that comes right before it.</p></li>
+<li><p><b>&lt;tbody&gt;...&lt;/tbody&gt;</b> - Encloses the body of your table. This tag is optional unless you are using the &lt;thead&gt; or &lt;tfoot&gt; tags. It used to separate the rows in the table from those in the header or footer.</p></li>
+<li><p><b>&lt;tfoot&gt;...&lt;/tfoot&gt;</b> - Encloses the table rows that are to be used as a footer. It is an optional tag and comes right after the ending &lt;tbody&gt; element.</p></li>
+<li><p><b>&lt;thead&gt;...&lt;/thead&gt;</b> - Encloses the table rows that are to be used as a header. It is an optional tag and comes before the opening &lt;tbody&gt; element.</p></li>
+</ul>
+<h1>Form Elements:</h1>
+<ul>
+<li><p><b>&lt;from attributes&gt;...&lt;/from&gt; </b> - Specifies a form. Forms can be used to send user input to the server in the form of NAME/VALUE pairs.</p></li>
+<li><p><b>&lt;input attributes /&gt; </b> - Specifies a control or input area for a form, from which a NAME/VALUE pair will be returned to the server. It could be Checkbox, Raidobox, password, text, reset, submit, hidden and image.</p></li>
+<li><p><b>&lt;select attributes&gt;...&lt;/select&gt; </b> - Creates a drop-down list of items. The list items are defined by the &lt;option&gt; tags placed inside the opening and closing &lt;select&gt; tag.</p></li>
+<li><p><b>&lt;option value="..." /&gt; </b> - Specifies an item in the drop down list. Placed within the opening and closing &lt;select&gt; tags. Any text following the &lt;option&gt; tag is what the user will see in the list.</p></li>
+<li><p><b>&lt;textarea attributes&gt;...&lt;/textarea&gt; </b> - Creates a multi-lined text entry box. Any text placed in between the tags is used as the default text string that is displayed when the page is loaded.</p></li>
+<li><p><b>&lt;button attributes&gt;...&lt;/button&gt; </b> - allows you to have push buttons on forms that more closely resemble push buttons available in Windows and other applications.</p></li>
+</ul>
+<h1>Text Formatting Elements:</h1>
+<ul>
+<li><p><b>&lt;address&gt;.....&lt; /address&gt;</b> - Encloses the signature file of the author of the page. Text is displayed in italics.</p></li>
+<li><p><b>&lt;acronym&gt;.....&lt; /acronym&gt;</b> - indicates an acronym in the text.</p></li>
+<li><p><b>&lt;b&gt;...&lt; /b&gt;</b> - Boldfaces the enclosed text. </p></li>
+<li><p><b>&lt;big&gt;...&lt; /big&gt;</b> - Makes the enclosed text one size larger. </p></li>
+<li><p><b>&lt;blink&gt;.....&lt; /blink&gt;</b> - Makes the enclosed text blink continually. </p></li>
+<li><p><b>&lt;blockquote&gt;.....&lt; /blockquote&gt;</b> - Encloses a long quote. Both the left and right margins are indented. </p></li>
+<li><p><b>&lt;br&gt;</b> - Inserts a line break.</p></li>
+<li><p><b>&lt;center&gt;.....&lt; /center&gt;</b> - Centers the enclosed elements.</p></li>
+<li><p><b>&lt;cite&gt;.....&lt; /cite&gt;</b> - Encloses a citation such as the title of a book or paper. </p></li>
+<li><p><b>&lt;code&gt;.....&lt; /code&gt;</b> - Encloses a sample of code. The text is rendered in small font. </p></li>
+<li><p><b>&lt;comment&gt;.....&lt; /comment&gt;</b> - Encloses a comment. Text inside the tags is ignored unless it contains HTML code. </p></li>
+<li><p><b>&lt;del&gt;.....&lt; /del&gt;</b> - To mark the document text that has been deleted since a previous version.</p></li>
+<li><p><b>&lt;dfn&gt;.....&lt; /dfn&gt;</b> - Encloses a definition. Text inside the tags is formatted to look like a definition. </p></li>
+<li><p><b>&lt;div&gt;...&lt; /div&gt;</b> - Specifies the alignment of the enclosed elements. Can be used to divide a document into sections that are aligned differently.</p></li>
+<li><p><b>&lt;em&gt;...&lt; /em&gt;</b> - Emphasis on the enclosed text (Italics). </p></li>
+<li><p><b>&lt;font attributes&gt;...&lt; /font&gt;</b> - Sets the font properties for the enclosed text.</p></li>
+<li><p><b>&lt;fieldset attributes&gt;...&lt; /fieldset&gt;</b> - Allows you can group related form fields, making your form easier to read and use.</p></li>
+<li><p><b>&lt;hr attributes /&gt;</b> - Inserts a horizontal line.</p></li>
+<li><p><b>&lt;i&gt;...&lt; /i&gt;</b> - The enclosed text is italics. </p></li>
+<li><p><b>&lt;ins&gt;...&lt; /ins&gt;</b> - To mark parts of a document that have been added since the document's last version.</p></li>
+<li><p><b>&lt;label&gt;...&lt; /label&gt;</b> - Allows you to lable a tag.</p></li>
+<li><p><b>&lt;kbd&gt;...&lt; /kbd&gt;</b> - Specifies text to be entered at the keyboard. Text is rendered as bold and fixed-width. </p></li>
+<li><p><b>&lt;p attributes&gt;...&lt; /p&gt;</b> - Designates the enclosed text as a plain paragraph.</p></li>
+<li><p><b>&lt;q&gt;...&lt;/q&gt;</b> - acts much the same as the &lt;blockquote&gt; tag, but applies to shorter quoted sections, ones that don't need paragraph breaks.</p></li>
+<li><p><b>&lt;pre&gt;.....&lt; /pre&gt;</b> - Displays text in fixed-width type without collapsing spaces.</p></li>
+<li><p><b>&lt;s&gt;.....&lt; /s&gt;</b> - Displays text with a line through it. The &lt;strike&gt; tag does exactly the same. </p></li>
+<li><p><b>&lt;samp&gt;...&lt; /samp&gt;</b> - Indicates sample output from a form or program. Text is rendered in small font. </p></li>
+<li><p><b>&lt;small&gt;...&lt; /small&gt;</b> - Makes the enclosed text one size smaller. </p></li>
+<li><p><b>&lt;spacer attributes&gt;...&lt; /spacer&gt;</b> - Inserts blocks of spaces into HTML documents.</p></li>
+<li><p><b>&lt;strong&gt;...&lt; /strong&gt;</b> - Stronger emphasis on the enclosed text.  </p></li>
+<li><p><b>&lt;sub&gt;...&lt; /sub&gt;</b> - Renders the enclosed text in subscript.</p></li>
+<li><p><b>&lt;sup&gt;...&lt; /sup&gt;</b> - Renders the enclosed text in superscript. </p></li>
+<li><p><b>&lt;tt&gt;...&lt; /tt&gt;</b> - The enclosed text is typewriter font.</p></li>
+<li><p><b>&lt;u&gt;...&lt; /u&gt;</b> - The enclosed text in underlined. </p></li>
+<li><p><b>&lt;var&gt;...&lt; /var&gt;</b> - Specifies a variable. Text is rendered in small fixed-width type. </p></li>
+<li><p><b>&lt;wbr&gt;</b> - Causes text enclosed by the NOBR tags to wrap only if necessary. </p></li>
+</ul>

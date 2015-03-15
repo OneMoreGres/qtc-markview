@@ -12,5 +12,6 @@
         <file>html/textile.html</file>
         <file>help/textile.textile</file>
         <file>js/textile.js</file>
+        <file>help/html.html</file>
     </qresource>
 </RCC>

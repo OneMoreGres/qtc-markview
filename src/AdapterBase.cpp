@@ -48,7 +48,7 @@ AdapterBase::~AdapterBase () {
 void AdapterBase::initView (const QString &plainText, QWebView *view) const {
   QString html;
   if (htmlFileName_.isEmpty ()) {
-    html = plainText.toHtmlEscaped ();
+    html = plainText;
   }
   else {
     html = QString::fromLocal8Bit (readFile (htmlFileName_.toHtmlEscaped ()));
