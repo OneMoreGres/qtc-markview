@@ -1,5 +1,6 @@
 #include "MarkviewWidget.h"
 #include "AdapterBase.h"
+#include "Constants.h"
 
 #include <QComboBox>
 #include <QWebView>
@@ -84,4 +85,14 @@ void MarkviewWidget::update () {
     Q_ASSERT (textDocument ());
     currentAdapter_->updateView (textDocument ()->plainText (), webView_);
   }
+}
+
+void MarkviewWidget::showHelp () {
+  if (!currentAdapter_ || !currentAdapter_->isHelpAvailable ()) {
+    return;
+  }
+  QString helpText = currentAdapter_->helpMessage ();
+  QString titlePattern (QStringLiteral ("Format help"));
+  Core::EditorManager::openEditorWithContents (Constants::QTCMARKVIEW_ID, &titlePattern,
+                                               helpText.toUtf8 ());
 }

@@ -25,6 +25,7 @@ namespace QtcMarkview {
         void changeView ();
         void init ();
         void update ();
+        void showHelp ();
 
       private:
         QWebView *webView_;
