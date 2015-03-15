@@ -27,7 +27,10 @@ namespace {
     QString result = source;
     result = result
              .replace (QStringLiteral ("\n"), QStringLiteral ("\\n")) // support multiline
-             .replace (QStringLiteral ("\""), QStringLiteral ("\\\"")); // support internal quotes
+             .replace (QStringLiteral ("\""), QStringLiteral ("\\\"")) // support internal quotes
+             .replace (QStringLiteral ("<script "),QStringLiteral ("&lt;script "))
+             .replace (QStringLiteral ("<script>"),QStringLiteral ("&lt;script&gt;"))
+             .replace (QStringLiteral ("</script>"),QStringLiteral ("&lt;/script&gt;"));
     return QStringLiteral ("\"") + result + QStringLiteral ("\"");
   }
 
