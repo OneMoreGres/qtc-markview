@@ -6,6 +6,7 @@
 #include <QWebView>
 #include <QWebSettings>
 #include <QVBoxLayout>
+#include <QToolButton>
 
 using namespace QtcMarkview::Internal;
 
@@ -16,12 +17,17 @@ MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   QWebSettings::globalSettings ()->setAttribute (QWebSettings::DeveloperExtrasEnabled, true);
 #endif
 
+  QToolButton *helpButton = new QToolButton (this);
+  helpButton->setIcon (QIcon (QStringLiteral (":icons/question1.png")));
+  helpButton->setToolTip (QStringLiteral ("Show format help"));
+  connect (helpButton, &QToolButton::clicked, this, &MarkviewWidget::showHelp);
+  insertExtraToolBarWidget (Left, helpButton);
+
   QComboBox *adapterCombo = new QComboBox (this);
   adapterCombo->addItems (adapters_.keys ());
   adapterCombo->setCurrentText (adapters_.key (nullptr));
   connect (adapterCombo, &QComboBox::currentTextChanged, this, &MarkviewWidget::currentAdapterChanged);
   insertExtraToolBarWidget (Left, adapterCombo);
-  //TODO show help
 }
 
 MarkviewWidget::~MarkviewWidget () {
