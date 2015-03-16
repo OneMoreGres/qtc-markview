@@ -19,11 +19,12 @@ WebViewFind::WebViewFind (QWebView *view)
 }
 
 bool WebViewFind::supportsReplace () const {
-  return false;
+  return true;
 }
 
 FindFlags WebViewFind::supportedFindFlags () const {
-  return FindBackward | FindCaseSensitively;
+  return FindBackward | FindCaseSensitively | FindWholeWords
+         | FindRegularExpression | FindPreserveCase;
 }
 
 void WebViewFind::resetIncrementalSearch () {
