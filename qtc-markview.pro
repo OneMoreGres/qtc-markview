@@ -30,7 +30,10 @@ TRANSLATIONS += \
 OTHER_FILES += \
     LICENSE.md \
     README.md \
-    uncrustify.cfg
+    uncrustify.cfg \
+    util/README.md \
+    util/make_dist.bat \
+    util/make_dist.sh
 
 PROVIDER = Gres
 
