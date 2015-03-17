@@ -1,5 +1,5 @@
 Used libs:
 
-* [Markdown](cant find the link)
+* [Markdown](https://github.com/chjj/marked)
 * [Asciidoctor](https://github.com/asciidoctor/asciidoctor.js)
 * [Textile](https://github.com/borgar/textile-js)

@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>js/markdown.js</file>
         <file>js/require.js</file>
         <file>html/markdown.html</file>
         <file>help/markdown.md</file>
@@ -13,5 +12,6 @@
         <file>help/textile.textile</file>
         <file>js/textile.js</file>
         <file>help/html.html</file>
+        <file>js/marked.js</file>
     </qresource>
 </RCC>

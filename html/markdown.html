@@ -1,8 +1,8 @@
 <script src="qrc:/js/require.js"></script>
 <script>
 function update (plainText) {
-  require (["qrc:/js/markdown.js"], function (markdown) {
-    document.body.innerHTML = markdown.encode (plainText);
+  require (["qrc:/js/marked.js"], function (markdown) {
+    document.body.innerHTML = markdown (plainText);
   });
 }
 </script>
