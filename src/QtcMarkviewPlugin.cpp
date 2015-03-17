@@ -3,8 +3,11 @@
 #include "MarkviewEditorFactory.h"
 
 #include <QCoreApplication>
+#include <QTranslator>
 
 #include <QtPlugin>
+
+#include <coreplugin/icore.h>
 
 using namespace QtcMarkview::Internal;
 
@@ -29,9 +32,27 @@ bool QtcMarkviewPlugin::initialize (const QStringList &arguments, QString *error
   Q_UNUSED (arguments)
   Q_UNUSED (errorString)
 
+  initLanguage ();
+
   addAutoReleasedObject (new MarkviewEditorFactory);
 
   return true;
+}
+
+void QtcMarkviewPlugin::initLanguage () {
+  const QString &language = Core::ICore::userInterfaceLanguage ();
+  if (!language.isEmpty ()) {
+    QStringList paths;
+    paths << Core::ICore::resourcePath () << Core::ICore::userResourcePath ();
+    const QString &trFile = QLatin1String ("QtcMarkview_") + language;
+    QTranslator *translator = new QTranslator (this);
+    foreach (const QString &path, paths) {
+      if (translator->load (trFile, path + QLatin1String ("/translations"))) {
+        qApp->installTranslator (translator);
+        break;
+      }
+    }
+  }
 }
 
 void QtcMarkviewPlugin::extensionsInitialized () {
