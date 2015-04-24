@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 
 #include <texteditor/normalindenter.h>
+#include <texteditor/textdocument.h>
 
 using namespace QtcMarkview::Internal;
 

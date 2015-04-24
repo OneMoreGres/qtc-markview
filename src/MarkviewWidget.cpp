@@ -10,6 +10,9 @@
 #include <QToolButton>
 
 #include <aggregation/aggregate.h>
+#include <texteditor/textdocument.h>
+#include <coreplugin/editormanager/editormanager.h>
+#include <texteditor/texteditorconstants.h>
 
 using namespace QtcMarkview::Internal;
 
@@ -43,7 +46,10 @@ MarkviewWidget::~MarkviewWidget () {
 }
 
 void MarkviewWidget::finalizeInitialization () {
-  setupAsPlainEditor ();
+  textDocument()->setMimeType(QLatin1String(TextEditor::Constants::C_TEXTEDITOR_MIMETYPE_TEXT));
+
+  setupGenericHighlighter ();
+  configureGenericHighlighter ();
 
   Q_ASSERT (textDocument ());
   connect (textDocument (), &TextEditor::TextDocument::contentsChanged,
