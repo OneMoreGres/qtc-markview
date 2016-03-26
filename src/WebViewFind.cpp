@@ -1,20 +1,19 @@
 #include "WebViewFind.h"
 
-#include <QWebView>
+#include <QWebEngineView>
 #include <QDebug>
 
 using namespace Core;
 
-QWebPage::FindFlags toWebPageFlags (FindFlags flags, bool highlightAll) {
-  QWebPage::FindFlags result = QWebPage::FindWrapsAroundDocument;
-  result = (flags & FindBackward) ? (result | QWebPage::FindBackward) : result;
-  result = (flags & FindCaseSensitively) ? (result | QWebPage::FindCaseSensitively) : result;
-  result = (highlightAll) ? (result | QWebPage::HighlightAllOccurrences) : result;
+QWebEnginePage::FindFlags toWebPageFlags (FindFlags flags) {
+  QWebEnginePage::FindFlags result = 0;
+  result = (flags & FindBackward) ? (result | QWebEnginePage::FindBackward) : result;
+  result = (flags & FindCaseSensitively) ? (result | QWebEnginePage::FindCaseSensitively) : result;
   return result;
 }
 
 
-WebViewFind::WebViewFind (QWebView *view)
+WebViewFind::WebViewFind (QWebEngineView *view)
   : view_ (view) {
 }
 
@@ -29,12 +28,12 @@ FindFlags WebViewFind::supportedFindFlags () const {
 
 void WebViewFind::resetIncrementalSearch () {
   Q_ASSERT (!view_.isNull ());
-  view_->findText (QString (), toWebPageFlags (0, true));
+  view_->findText (QString (), toWebPageFlags (0));
 }
 
 void WebViewFind::clearHighlights () {
   Q_ASSERT (!view_.isNull ());
-  view_->findText (QString (), toWebPageFlags (0, true));
+  view_->findText (QString (), toWebPageFlags (0));
 }
 
 QString WebViewFind::currentFindString () const {
@@ -49,17 +48,13 @@ QString WebViewFind::completedFindString () const {
 
 WebViewFind::Result WebViewFind::findIncremental (const QString &txt, FindFlags findFlags) {
   Q_ASSERT (!view_.isNull ());
-  view_->findText (QString (), toWebPageFlags (0, true));
-  bool found = view_->findText (txt, toWebPageFlags (findFlags, true));
-  if (found) {
-    view_->findText (QString ()); // to start selection from beginning
-    findStep (txt, findFlags);
-  }
-  return (found) ? Found : NotFound;
+  view_->findText (QString (), toWebPageFlags (0));
+  view_->findText (txt, toWebPageFlags (findFlags));
+  return NotFound;
 }
 
 WebViewFind::Result WebViewFind::findStep (const QString &txt, FindFlags findFlags) {
   Q_ASSERT (!view_.isNull ());
-  bool found = view_->findText (txt, toWebPageFlags (findFlags, false));
-  return (found) ? Found : NotFound;
+  view_->findText (txt, toWebPageFlags (findFlags));
+  return NotFound;
 }

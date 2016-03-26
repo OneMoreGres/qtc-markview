@@ -4,8 +4,8 @@
 #include "WebViewFind.h"
 
 #include <QComboBox>
-#include <QWebView>
-#include <QWebSettings>
+#include <QWebEngineView>
+#include <QWebEngineSettings>
 #include <QVBoxLayout>
 #include <QToolButton>
 
@@ -18,10 +18,6 @@ using namespace QtcMarkview::Internal;
 
 MarkviewWidget::MarkviewWidget (const Adapters &adapters)
   : webView_ (nullptr), adapters_ (adapters), currentAdapter_ (nullptr) {
-
-#ifdef QT_DEBUG
-  QWebSettings::globalSettings ()->setAttribute (QWebSettings::DeveloperExtrasEnabled, true);
-#endif
 
   QToolButton *helpButton = new QToolButton (this);
   helpButton->setIcon (QIcon (QStringLiteral (":icons/question1.png")));
@@ -67,10 +63,8 @@ void MarkviewWidget::currentAdapterChanged (const QString &newAdapterName) {
 void MarkviewWidget::changeView () {
   // Create webView and place on top of base editor (not viewport).
   if (currentAdapter_ && !webView_) {
-    webView_ = new QWebView (this);
-    webView_->setStyleSheet (QStringLiteral ("QWebView {background: #FFFFFF;}"));
-    QNetworkAccessManager *networkManager = webView_->page ()->networkAccessManager ();
-    networkManager->setNetworkAccessible (QNetworkAccessManager::NotAccessible);
+    webView_ = new QWebEngineView (this);
+    webView_->setStyleSheet (QStringLiteral ("QWebEngineView {background: #FFFFFF;}"));
 #ifndef QT_DEBUG
     webView_->setContextMenuPolicy (Qt::NoContextMenu);
 #endif

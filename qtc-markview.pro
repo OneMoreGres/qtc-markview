@@ -4,7 +4,7 @@ VERSION_SUFFIX = ""
 
 include(paths.pri)
 
-QT += webkitwidgets
+QT += webenginewidgets
 
 # QtcMarkview files
 

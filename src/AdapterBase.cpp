@@ -2,8 +2,8 @@
 
 #include <QFile>
 #include <QDebug>
-#include <QWebView>
-#include <QWebFrame>
+#include <QWebEngineView>
+#include <QWebEnginePage>
 
 using namespace QtcMarkview::Internal;
 
@@ -45,7 +45,7 @@ AdapterBase::~AdapterBase () {
 
 }
 
-void AdapterBase::initView (const QString &plainText, QWebView *view) const {
+void AdapterBase::initView (const QString &plainText, QWebEngineView *view) const {
   QString html;
   if (htmlFileName_.isEmpty ()) {
     html = plainText;
@@ -57,15 +57,15 @@ void AdapterBase::initView (const QString &plainText, QWebView *view) const {
   view->setHtml (html);
 }
 
-void AdapterBase::updateView (const QString &plainText, QWebView *view) const {
+void AdapterBase::updateView (const QString &plainText, QWebEngineView *view) const {
   if (htmlFileName_.isEmpty ()) {
     view->setHtml (plainText);
   }
   else {
     QString preprocessed = toJsString (plainText);
     QString updateScript = QString (QStringLiteral ("update (%1);")).arg (preprocessed);
-    QWebFrame *mainFrame = view->page ()->mainFrame ();
-    mainFrame->evaluateJavaScript (updateScript);
+    QWebEnginePage *mainFrame = view->page ();
+    mainFrame->runJavaScript (updateScript);
   }
 }
 

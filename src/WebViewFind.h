@@ -5,13 +5,13 @@
 
 #include <coreplugin/find/ifindsupport.h>
 
-class QWebView;
+class QWebEngineView;
 
 class WebViewFind : public Core::IFindSupport {
   Q_OBJECT
 
   public:
-    WebViewFind (QWebView *view);
+    WebViewFind (QWebEngineView *view);
 
     bool supportsReplace () const;
     Core::FindFlags supportedFindFlags () const;
@@ -23,7 +23,7 @@ class WebViewFind : public Core::IFindSupport {
     Result findStep (const QString &txt, Core::FindFlags findFlags);
 
   private:
-    QPointer<QWebView> view_;
+    QPointer<QWebEngineView> view_;
 };
 
 #endif // WEBVIEWFIND_H

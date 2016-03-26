@@ -3,7 +3,7 @@
 
 #include <texteditor/texteditor.h>
 
-class QWebView;
+class QWebEngineView;
 
 namespace QtcMarkview {
   namespace Internal {
@@ -31,7 +31,7 @@ namespace QtcMarkview {
         void showHelp ();
 
       private:
-        QWebView *webView_;
+        QWebEngineView *webView_;
 
         const Adapters &adapters_;
         const AdapterBase *currentAdapter_;
