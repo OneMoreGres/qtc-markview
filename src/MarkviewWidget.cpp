@@ -2,6 +2,7 @@
 #include "AdapterBase.h"
 #include "Constants.h"
 #include "WebViewFind.h"
+#include "PreviewPage.h"
 
 #include <QComboBox>
 #include <QWebEngineView>
@@ -64,6 +65,7 @@ void MarkviewWidget::changeView () {
   // Create webView and place on top of base editor (not viewport).
   if (currentAdapter_ && !webView_) {
     webView_ = new QWebEngineView (this);
+    webView_->setPage (new PreviewPage (webView_));
     webView_->setStyleSheet (QStringLiteral ("QWebEngineView {background: #FFFFFF;}"));
 #ifndef QT_DEBUG
     webView_->setContextMenuPolicy (Qt::NoContextMenu);
@@ -80,8 +82,10 @@ void MarkviewWidget::changeView () {
   }
 
   if (currentAdapter_) {
+    hide ();
     setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+    show ();
     webView_->show ();
   }
   else {
