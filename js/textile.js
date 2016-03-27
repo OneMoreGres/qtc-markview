@@ -16,7 +16,7 @@
 
   /***
    * Regular Expression helper methods
-   * 
+   *
    * This provides the `re` object, which contains several helper
    * methods for working with big regular expressions (soup).
    *
@@ -82,7 +82,7 @@
 
   /***
    * JSONML helper methods - http://www.jsonml.org/
-   * 
+   *
    * This provides the `JSONML` object, which contains helper
    * methods for rendering JSONML to HTML.
    *
@@ -125,7 +125,7 @@
       for ( a in attributes ) {
         tag_attrs += ( attributes[ a ] == null )
                 ? " " + a
-                : " " + a + '="' + JSONML.escape( attributes[ a ], true ) + '"'
+                : " " + a + '="' + JSONML.escape( String( attributes[ a ] ), true ) + '"'
                 ;
       }
 
@@ -133,7 +133,7 @@
       if ( tag == "!" ) {
         return "<!--" + content.join( "" ) + "-->";
       }
-      else if ( tag === "img" || tag === "br" || tag === "hr" || tag === "input" ) {
+      else if ( tag in html_singletons ) {
         return "<" + tag + tag_attrs + " />";
       }
       else {
@@ -145,8 +145,10 @@
 
   // merge object b properties into obect a
   function merge ( a, b ) {
-    for ( var k in b ) {
-      a[ k ] = b[ k ];
+    if ( b ) {
+      for ( var k in b ) {
+        a[ k ] = b[ k ];
+      }
     }
     return a;
   }
@@ -167,9 +169,10 @@
   re.pattern[ 'html_attr' ] = '(?:"[^"]+"|\'[^\']+\'|[^>\\s]+)';
   re.pattern[ 'tx_urlch'  ] = '[\\w"$\\-_.+!*\'(),";\\/?:@=&%#{}|\\\\^~\\[\\]`]';
   re.pattern[ 'tx_cite'   ] = ':((?:[^\\s()]|\\([^\\s()]+\\)|[()])+?)(?=[!-\\.:-@\\[\\\\\\]-`{-~]+(?:$|\\s)|$|\\s)';
+  re.pattern[ 'listhd'    ] = '[\\t ]*[\\#\\*]*(\\*|\\#(?:_|\\d+)?)[:pba_attr:](?: \\S|\\.\\s*(?=\\S|\\n))';
   re.pattern[ 'ucaps'     ] = "A-Z"+
                               // Latin extended À-Þ
-                              "\u00c0-\u00d6\u00d8-\u00de"+ 
+                              "\u00c0-\u00d6\u00d8-\u00de"+
                               // Latin caps with embelishments and ligatures...
                               "\u0100\u0102\u0104\u0106\u0108\u010a\u010c\u010e\u0110\u0112\u0114\u0116\u0118\u011a\u011c\u011e\u0120\u0122\u0124\u0126\u0128\u012a\u012c\u012e\u0130\u0132\u0134\u0136\u0139\u013b\u013d\u013f"+
                               "\u0141\u0143\u0145\u0147\u014a\u014c\u014e\u0150\u0152\u0154\u0156\u0158\u015a\u015c\u015e\u0160\u0162\u0164\u0166\u0168\u016a\u016c\u016e\u0170\u0172\u0174\u0176\u0178\u0179\u017b\u017d"+
@@ -188,14 +191,21 @@
 
   var re_block          = re.compile( /^([:blocks:])/ )
     , re_block_se       = re.compile( /^[:blocks:]$/ )
-    , re_block_normal   = re.compile( /^(.*?)($|\n(?:\s*\n|$)+)/, 's' )
-    , re_block_extended = re.compile( /^(.*?)($|\n+(?=[:blocks:][:pba_attr:]\.))/, 's' )
-    , re_ruler          = /^(\-\-\-+|\*\*\*+|___+)(\n\s+|$)/
-    , re_list           = re.compile( /^((?:[\t ]*[\#\*]+[:pba_attr:] .+?(?:\n|$))+)(\s*\n)?/ )
-    , re_list_item      = /^([\#\*]+)(.+?)(\n|$)/
-    , re_table          = re.compile( /^((?:table[:pba_attr:]\.\n)?(?:(?:[:pba_attr:]\.[^\n\S]*)?\|.*?\|[^\n\S]*(?:\n|$))+)([^\n\S]*\n)?/, 's' )
-    , re_table_head     = /^table(_?)([^\n]+)\.\s?\n/
-    , re_table_row      = re.compile( /^([:pba_attr:]\.[^\n\S]*)?\|(.*?)\|[^\n\S]*(\n|$)/, 's' )
+    , re_block_normal   = re.compile( /^(.*?)($|\r?\n(?=[:listhd:])|\r?\n(?:\s*\n|$)+)/, 's' )
+    , re_block_extended = re.compile( /^(.*?)($|\r?\n(?=[:listhd:])|\r?\n+(?=[:blocks:][:pba_attr:]\.))/, 's' )
+    , re_ruler          = /^(\-\-\-+|\*\*\*+|___+)(\r?\n\s+|$)/
+    , re_list           = re.compile( /^((?:[:listhd:][^\0]*?(?:\r?\n|$))+)(\s*\n|$)/,'s' )
+    , re_list_item      = re.compile( /^([\#\*]+)([^\0]+?)(\n(?=[:listhd:])|$)/, 's' )
+    , re_deflist        = /^((?:- (?:[^\n]\n?)+?)+:=(?: *\n[^\0]+?=:(?:\n|$)|(?:[^\0]+?(?:$|\n(?=\n|- )))))+/
+    , re_deflist_item   = /^((?:- (?:[^\n]\n?)+?)+):=( *\n[^\0]+?=:\s*(?:\n|$)|(?:[^\0]+?(?:$|\n(?=\n|- ))))/
+
+    , re_table          = re.compile( /^((?:table[:pba_attr:]\.(?:\s(.+?))\s*\n)?(?:(?:[:pba_attr:]\.[^\n\S]*)?\|.*?\|[^\n\S]*(?:\n|$))+)([^\n\S]*\n)?/, 's' )
+    , re_table_head     = /^table(_?)([^\n]*?)\.(?:[ \t](.+?))?\s*\n/
+    , re_table_row      = re.compile( /^(?:\|([~\^\-][:pba_attr:])\.\s*\n)?([:pba_attr:]\.[^\n\S]*)?\|(.*?)\|[^\n\S]*(\n|$)/, 's' )
+    , re_table_caption  = /^\|=([^\n+]*)\n/
+    , re_table_colgroup = /^\|:([^\n+]*)\|[\r\t ]*\n/
+    , re_table_rowgroup = /^\|([\^\-\~])([^\n+]*)\.[ \t\r]*\n/
+
     , re_fenced_phrase  = /^\[(__?|\*\*?|\?\?|[\-\+\^~@%])([^\n]+)\1\]/
     , re_phrase         = /^([\[\{]?)(__?|\*\*?|\?\?|[\-\+\^~@%])/
     , re_text           = re.compile( /^.+?(?=[\\<!\[_\*`]|\n|$)/, 's' )
@@ -208,7 +218,7 @@
     , re_link_ref       = re.compile( /^\[([^\]]+)\]((?:https?:\/\/|\/)\S+)(?:\s*\n|$)/ )
     , re_link_title     = /\s*\(((?:\([^\(\)]*\)|[^\(\)])+)\)$/
     , re_footnote_def   = /^fn\d+$/
-    , re_footnote       = /^\[(\d+)\]/
+    , re_footnote       = /^\[(\d+)(\!?)\]/
 
     // HTML
     , re_html_tag_block = re.compile( /^\s*<([:html_id:](?::[a-zA-Z\d]+)*)((?:\s[^=\s\/]+(?:\s*=\s*[:html_attr:])?)+)?\s*(\/?)>(\n*)/ )
@@ -232,8 +242,8 @@
 
     // pba
     , re_pba_classid    = /^\(([^\(\)\n]+)\)/
-    , re_pba_padding_l  = /^([\(]+)/
-    , re_pba_padding_r  = /^([\)]+)/
+    , re_pba_padding_l  = /^(\(+)/
+    , re_pba_padding_r  = /^(\)+)/
     , re_pba_align_blk  = /^(<>|<|>|=)/
     , re_pba_align_img  = /^(<|>|=)/
     , re_pba_valign     = /^(~|\^|\-)/
@@ -241,7 +251,7 @@
     , re_pba_rowspan    = /^\/(\d+)/
     , re_pba_styles     = /^\{([^\}]*)\}/
     , re_pba_css        = /^\s*([^:\s]+)\s*:\s*(.+)\s*$/
-    , re_pba_lang       = /^\[([^\[\]]+)\]/
+    , re_pba_lang       = /^\[([^\[\]\n]+)\]/
     ;
 
   var phrase_convert = {
@@ -258,8 +268,8 @@
   , '@':  'code'
   };
 
-  // area, base, basefont, bgsound, br, col, command, embed, frame, hr, 
-  // img, input, keygen, link, meta, param, source, track or wbr 
+  // area, base, basefont, bgsound, br, col, command, embed, frame, hr,
+  // img, input, keygen, link, meta, param, source, track or wbr
   var html_singletons = {
     'br': 1
   , 'hr': 1
@@ -272,6 +282,7 @@
   , 'input': 1
   , 'option': 1
   , 'base': 1
+  , 'col': 1
   };
 
   var pba_align_lookup = {
@@ -383,6 +394,29 @@
       }
     }
     return d;
+  }
+
+
+  // drop or add tab levels to JsonML tree
+  function reindent ( ml, shift_by ) {
+    // a bit obsessive, but there we are...
+    if ( !shift_by ) { return ml; }
+    return ml.map(function ( s ) {
+      if ( /^\n\t+/.test( s ) ) {
+        if ( shift_by < 0 ) {
+          s = s.slice( 0, shift_by );
+        }
+        else {
+          for (var i=0; i<shift_by; i++) {
+            s += '\t';
+          }
+        }
+      }
+      else if ( _isArray( s ) ) {
+        return reindent( s, shift_by );
+      }
+      return s;
+    });
   }
 
 
@@ -504,8 +538,8 @@
 
   function parse_attr ( input, element, end_token ) {
     /*
-    The attr bit causes massive problems for span elements when parens are used.
-    Parens are a total mess and, unsurprisingly, causes trip ups:
+    The attr bit causes massive problems for span elements when parentheses are used.
+    Parentheses are a total mess and, unsurprisingly, cause trip-ups:
 
      RC: `_{display:block}(span) span (span)_` -> `<em style="display:block;" class="span">(span) span (span)</em>`
      PHP: `_{display:block}(span) span (span)_` -> `<em style="display:block;">(span) span (span)</em>`
@@ -513,6 +547,11 @@
     PHP and RC seem to mostly solve this by not parsing a final attr parens on spans if the
     following character is a non-space. I've duplicated that: Class/ID is not matched on spans
     if it is followed by `end_token` or <space>.
+
+    Lang is not matched here if it is followed by the end token. Theoretically I could limit the lang
+    attribute to /^\[[a-z]{2+}(\-[a-zA-Z0-9]+)*\]/ because Textile is layered on top of HTML which
+    only accepts valid BCP 47 language tags, but who knows what atrocities are being preformed
+    out there in the real world. So this attempts to emulate the other libraries.
     */
     input += '';
     if ( !input || element === 'notextile' ) { return undefined; }
@@ -521,8 +560,9 @@
       , st = {}
       , o = { 'style': st }
       , remaining = input
-      , is_block  = element === 'table' || element === 'td' || re_block_se.test( element ) // "in" test would be better but what about fn#.?
+      , is_block  = /^(?:table|t[dh]|t(?:foot|head|body))$/.test( element ) || re_block_se.test( element ) // "in" test would be better but what about fn#.?
       , is_img    = element === 'img'
+      , is_list   = element === 'li'
       , is_phrase = !is_block && !is_img && element !== 'a'
       , re_pba_align = ( is_img ) ? re_pba_align_img : re_pba_align_blk
       ;
@@ -539,8 +579,17 @@
       }
 
       if ( (m = re_pba_lang.exec( remaining )) ) {
-        o['lang'] = m[1];
-        remaining = remaining.slice( m[0].length );
+        var rm = remaining.slice( m[0].length );
+        if (
+            ( !rm && is_phrase ) ||
+            ( end_token && end_token === rm.slice(0,end_token.length) )
+           ) {
+          m = null;
+        }
+        else {
+          o['lang'] = m[1];
+          remaining = remaining.slice( m[0].length );
+        }
         continue;
       }
 
@@ -551,16 +600,17 @@
             ( end_token && (rm[0] === ' ' || end_token === rm.slice(0,end_token.length)) )
            ) {
           m = null;
-          continue;
         }
-        var bits = m[1].split( '#' );
-        if ( bits[0] ) { o['class'] = bits[0]; }
-        if ( bits[1] ) { o['id']    = bits[1]; }
-        remaining = rm;
+        else {
+          var bits = m[1].split( '#' );
+          if ( bits[0] ) { o['class'] = bits[0]; }
+          if ( bits[1] ) { o['id']    = bits[1]; }
+          remaining = rm;
+        }
         continue;
       }
 
-      if ( is_block ) {
+      if ( is_block || is_list ) {
         if ( (m = re_pba_padding_l.exec( remaining )) ) {
           st[ "padding-left" ] = ( m[1].length ) + "em";
           remaining = remaining.slice( m[0].length );
@@ -573,8 +623,8 @@
         }
       }
 
-      // only for blocks: 
-      if ( is_img || is_block ) {
+      // only for blocks:
+      if ( is_img || is_block || is_list ) {
         if ( (m = re_pba_align.exec( remaining )) ) {
           var align = pba_align_lookup[ m[1] ];
           if ( is_img ) {
@@ -639,7 +689,7 @@
       .replace( /([^.]?)\.{3}/g, '$1&#8230;' ) // ellipsis
       // dashes
       .replace( re_emdash, '$1&#8212;$2' ) // em dash
-      .replace( /( )-( )/g, '$1&#8211;$2' ) // en dash
+      .replace( / - /g, ' &#8211; ' ) // en dash
       // legal marks
       .replace( re_trademark, '$1&#8482;' )   // trademark
       .replace( re_registered, '$1&#174;'  )   // registered
@@ -653,152 +703,344 @@
       .replace( re_apostrophe, '$1&#8217;$2' )    // I'm an apostrophe
       .replace( re_closing_squote, '$1&#8217;' )     // single closing quote
       .replace( /'/g, '&#8216;' )
+      // fractions and degrees
+      .replace( /[\(\[]1\/4[\]\)]/, '&#188;' )
+      .replace( /[\(\[]1\/2[\]\)]/, '&#189;' )
+      .replace( /[\(\[]3\/4[\]\)]/, '&#190;' )
+      .replace( /[\(\[]o[\]\)]/, '&#176;' )
+      .replace( /[\(\[]\+\/\-[\]\)]/, '&#177;' )
       ;
   }
 
 
   /* list parser */
 
-  function parse_list ( src, options ) {
+  function list_pad ( n ) {
+    var s = '\n';
+    while ( n-- ) { s += '\t'; }
+    return s;
+  }
 
-    src = ribbon( src.replace( /(^|\n)[\t ]+/, '$1' ) );
-    var pad = function ( n ) {
-          var s = '\n';
-          while ( n-- ) { s += '\t'; }
-          return s;
-        }
-      , stack = []
+  function parse_list ( src, options ) {
+    src = ribbon( src.replace( /(^|\r?\n)[\t ]+/, '$1' ) );
+    var stack = []
+      , curr_idx = {}
+      , last_idx = options._lst || {}
+      , list_pba
+      , item_index = 0
       , m
+      , n
       , s
       ;
-
     while ( (m = re_list_item.exec( src )) ) {
-
       var item = [ 'li' ]
-        , pba = parse_attr( m[2], 'li' )
+        , start_index = 0
+        , dest_level = m[1].length
+        , type = m[1].substr(-1) === '#' ? 'ol' : 'ul'
+        , new_li = null
+        , lst
+        , par
+        , pba
+        , r
         ;
-      if ( pba ) {
+
+      // list starts and continuations
+      if ( n = /^(_|\d+)/.exec( m[2] ) ) {
+        item_index = isFinite( n[1] )
+              ? parseInt( n[1], 10 )
+              : last_idx[ dest_level ] || curr_idx[ dest_level ] || 1;
+        m[2] = m[2].slice( n[1].length );
+      }
+
+      if ( pba = parse_attr( m[2], 'li' ) ) {
         m[2] = m[2].slice( pba[0] );
         pba = pba[1];
       }
 
-      var dest_level = m[1].length
-        , type = m[1].substr(-1) === '#' ? 'ol' : 'ul'
-        , eqlev = stack.length === dest_level
-        , new_li = null
-        , lst
-        , par
-        , r
-        ;
+      // list control
+      if ( /^\.\s*$/.test( m[2] ) ) {
+        list_pba = pba || {};
+        src.advance( m[0] );
+        continue;
+      }
+
       // create nesting until we have correct level
       while ( stack.length < dest_level ) {
-        lst = [ type, pad( stack.length + 1 ), (new_li = [ 'li' ]) ];
+        // list always has an attribute object, this simplifies first-pba resolution
+        lst = [ type, {}, list_pad( stack.length + 1 ), (new_li = [ 'li' ]) ];
         par = stack[ stack.length - 1 ];
         if ( par ) {
-          par.li.push( pad( stack.length ) );
+          par.li.push( list_pad( stack.length ) );
           par.li.push( lst );
         }
-        stack.push({ ul: lst, li: new_li });
+        stack.push({
+          ul: lst
+        , li: new_li
+        , att: 0  // count pba's found per list
+        });
+        curr_idx[ stack.length ] = 1;
       }
+
       // remove nesting until we have correct level
       while ( stack.length > dest_level ) {
         r = stack.pop();
-        r.ul.push( pad( stack.length ) );
+        r.ul.push( list_pad( stack.length ) );
+        // lists have a predictable structure - move pba from listitem to list
+        if ( r.att === 1 && !r.ul[3][1].substr ) {
+          merge( r.ul[1], r.ul[3].splice( 1, 1 )[ 0 ] );
+        }
       }
+
+      // parent list
       par = stack[ stack.length - 1 ];
+
+      // have list_pba or start_index?
+      if ( item_index ) {
+        par.ul[1].start = curr_idx[ dest_level ] = item_index;
+        item_index = 0; // falsy prevents this from fireing until it is set again
+      }
+      if ( list_pba ) {
+        par.att = 9;  // "more than 1" prevent pba transfers on list close
+        merge( par.ul[1], list_pba );
+        list_pba = null;
+      }
+
       if ( !new_li ) {
-        par.ul.push( pad( stack.length ), item );
+        par.ul.push( list_pad( stack.length ), item );
         par.li = item;
       }
-      if ( pba ) { par.li.push( pba ); }
+      if ( pba ) {
+        par.li.push( pba );
+        par.att++;
+      }
       Array.prototype.push.apply( par.li, parse_inline( m[2].trim(), options ) );
 
       src.advance( m[0] );
+      curr_idx[ dest_level ] = (curr_idx[ dest_level ] || 0) + 1;
     }
+
+    // remember indexes for continuations next time
+    options._lst = curr_idx;
 
     while ( stack.length ) {
       s = stack.pop();
-      s.ul.push( pad( stack.length ) );
+      s.ul.push( list_pad( stack.length ) );
+      // lists have a predictable structure - move pba from listitem to list
+      if ( s.att === 1 && !s.ul[3][1].substr ) {
+        merge( s.ul[1], s.ul[3].splice( 1, 1 )[ 0 ] );
+      }
     }
 
     return s.ul;
   }
 
 
+  /* definitions list parser */
+
+  function parse_deflist ( src, options ) {
+    src = ribbon( src.trim() );
+    var deflist = [ 'dl', '\n' ]
+      , terms
+      , def
+      , m
+      ;
+    while ( (m = re_deflist_item.exec( src )) ) {
+      // add terms
+      terms = m[1].split( /(?:^|\n)\- / ).slice(1);
+      while ( terms.length ) {
+        deflist.push( '\t'
+                  , [ 'dt' ].concat( parse_inline( terms.shift().trim(), options ) )
+                  , '\n'
+                  );
+      }
+      // add definitions
+      def = m[2].trim();
+      deflist.push( '\t'
+                , [ 'dd' ].concat(
+                    /=:$/.test( def )
+                      ? parse_blocks( def.slice(0,-2).trim(), options )
+                      : parse_inline( def, options )
+                  )
+                , '\n'
+                );
+      src.advance( m[0] );
+    }
+    return deflist;
+  }
+
 
   /* table parser */
 
+  function parse_colgroup ( src ) {
+    var colgroup = [ 'colgroup', {} ];
+    src.split( '|' )
+        .forEach(function ( s, is_col ) {
+          var d = s.trim()
+            , col = ( is_col ) ? {} : colgroup[ 1 ]
+            , m;
+          if ( d ) {
+            if ( (m = /^\\(\d+)/.exec( d )) ) {
+              col.span = +m[ 1 ];
+              d = d.slice( m[ 0 ].length );
+            }
+            if ( (m = parse_attr( d, 'col' )) ) {
+              merge( col, m[ 1 ] );
+              d = d.slice( m[ 0 ] );
+            }
+            if ( (m = /\b\d+\b/.exec( d )) ) {
+              col.width = +m[0];
+            }
+          }
+          if ( is_col ) {
+            colgroup.push( '\n\t\t', [ 'col', col ] );
+          }
+        });
+    return colgroup.concat([ '\n\t' ]);
+  }
+
   function parse_table ( src, options ) {
     src = ribbon( src.trim() );
-    var table = [ 'table' ]
+    var rowgroups = []
+      , colgroup
+      , caption
+      , t_attr = {}
+      , t_curr
       , row
       , inner
       , pba
       , more
       , m
+      , extended = 0
       ;
+    var set_rowgroup = function ( type, pba ) {
+      t_curr = [ type, pba || {} ];
+      rowgroups.push( t_curr );
+    };
 
     if ( (m = re_table_head.exec( src )) ) {
       // parse and apply table attr
       src.advance( m[0] );
       pba = parse_attr( m[2], 'table' );
       if ( pba ) {
-        table.push( pba[1] );
+        merge( t_attr, pba[1] );
+      }
+      if ( m[3] ) {
+        t_attr.summary = m[3];
       }
     }
 
-    while ( (m = re_table_row.exec( src )) ) {
-      row = [ 'tr' ];
-
-      if ( m[1] && (pba = parse_attr( m[1], 'tr' )) ) {
-        // FIXME: requires "\.\s?" -- else what ?
-        row.push( pba[1] );
+    // caption
+    if ( (m = re_table_caption.exec( src )) ) {
+      caption = [ 'caption' ];
+      if ( (pba = parse_attr( m[1], 'caption' )) ) {
+        caption.push( pba[1] );
+        m[1] = m[1].slice( pba[0] );
       }
-
-      table.push( '\n\t', row );
-      inner = ribbon( m[2] );
-
-      do {
-        inner.save();
-
-        // cell loop
-        var th = inner.startsWith( '_' )
-          , cell = [ th ? 'th' : 'td' ]
-          ;
-        if ( th ) {
-          inner.advance( 1 );
-        }
-
-        pba = parse_attr( inner, 'td' );
-        if ( pba ) {
-          inner.advance( pba[0] );
-          cell.push( pba[1] ); // FIXME: don't do this if next text fails
-        }
-
-        if ( pba || th ) {
-          var d = /^\.\s*/.exec( inner );
-          if ( d ) {
-            inner.advance( d[0] );
-          }
-          else {
-            cell = [ 'td' ];
-            inner.load();
-          }
-        }
-
-        var mx = /^(==.*?==|[^\|])*/.exec( inner );
-        cell = cell.concat( parse_inline( mx[0], options ) );
-        row.push( '\n\t\t', cell );
-        more = inner.valueOf().charAt( mx[0].length ) === '|';
-        inner.advance( mx[0].length + 1 );
-
+      if ( /\./.test( m[1] ) ) { // mandatory "."
+        caption.push( m[1].slice( 1 ).replace( /\|\s*$/, '' ).trim() );
+        extended++;
+        src.advance( m[0] );
       }
-      while ( more );
-
-      row.push( '\n\t' );
-
-      src.advance( m[0] );
+      else {
+        caption = null;
+      }
     }
+
+    do {
+      // colgroup
+      if ( (m = re_table_colgroup.exec( src )) ) {
+        colgroup = parse_colgroup( m[1] );
+        extended++;
+      }
+      // "rowgroup" (tbody, thead, tfoot)
+      else if ( (m = re_table_rowgroup.exec( src )) ) {
+        // PHP allows any amount of these in any order
+        // and simply translates them straight through
+        // the same is done here.
+        var tag = ( m[1] === '^' ) ? 'thead' :
+                  ( m[1] === '~' ) ? 'tfoot' :
+                  ( m[1] === '-' ) ? 'tbody' : 'tbody' ;
+        pba = parse_attr( m[2]+' ', tag );
+        set_rowgroup( tag, pba && pba[1] );
+        extended++;
+      }
+      // row
+      else if ( (m = re_table_row.exec( src )) ) {
+        if ( !t_curr ) { set_rowgroup( 'tbody' ); }
+
+        row = [ 'tr' ];
+
+        if ( m[2] && (pba = parse_attr( m[2], 'tr' )) ) {
+          // FIXME: requires "\.\s?" -- else what ?
+          row.push( pba[1] );
+        }
+
+        t_curr.push( '\n\t\t', row );
+        inner = ribbon( m[3] );
+
+        do {
+          inner.save();
+
+          // cell loop
+          var th = inner.startsWith( '_' )
+            , cell = [ th ? 'th' : 'td' ]
+            ;
+          if ( th ) {
+            inner.advance( 1 );
+          }
+
+          pba = parse_attr( inner, 'td' );
+          if ( pba ) {
+            inner.advance( pba[0] );
+            cell.push( pba[1] ); // FIXME: don't do this if next text fails
+          }
+
+          if ( pba || th ) {
+            var p = /^\.\s*/.exec( inner );
+            if ( p ) {
+              inner.advance( p[0] );
+            }
+            else {
+              cell = [ 'td' ];
+              inner.load();
+            }
+          }
+
+          var mx = /^(==.*?==|[^\|])*/.exec( inner );
+          cell = cell.concat( parse_inline( mx[0], options ) );
+          row.push( '\n\t\t\t', cell );
+          more = inner.valueOf().charAt( mx[0].length ) === '|';
+          inner.advance( mx[0].length + 1 );
+
+        }
+        while ( more );
+
+        row.push( '\n\t\t' );
+
+      }
+      //
+      if ( m ) {
+        src.advance( m[0] );
+      }
+    } while ( m );
+
+    // assemble table
+    var table = [ 'table', t_attr ];
+    if ( extended ) {
+      if ( caption ) {
+        table.push( '\n\t', caption )
+      }
+      if ( colgroup ) {
+        table.push( '\n\t', colgroup )
+      }
+      rowgroups.forEach(function ( tbody ) {
+        table.push( '\n\t', tbody.concat([ '\n\t' ]) );
+      });
+    }
+    else {
+      table = table.concat( reindent( rowgroups[0].slice(2), -1 ) );
+    }
+
     table.push( '\n' );
     return table;
 
@@ -820,6 +1062,9 @@
       src.save();
 
       // linebreak -- having this first keeps it from messing to much with other phrases
+      if ( src.startsWith( '\r\n' ) ) {
+        src.advance( 1 ); // skip cartridge returns
+      }
       if ( src.startsWith( '\n' ) ) {
         src.advance( 1 );
 
@@ -883,7 +1128,7 @@
           }
           continue;
         }
-        // else 
+        // else
         src.load();
       }
 
@@ -929,7 +1174,7 @@
           continue;
         }
         else { // need terminator
-          // gulp up the rest of this block... 
+          // gulp up the rest of this block...
           var re_end_tag = re.compile( "^(.*?)(</" + tag + "\\s*>)", 's' );
           if ( (m = re_end_tag.exec( src )) ) {
             src.advance( m[0] );
@@ -952,10 +1197,11 @@
       }
 
       // footnote
-      if ( (m = re_footnote.exec( src )) ) {
+      if ( (m = re_footnote.exec( src )) && /\S/.test( behind ) ) {
         src.advance( m[0] );
         list.add( [ 'sup', { 'class': 'footnote', 'id': 'fnr' + m[1] },
-                    [ 'a', { href: '#fn' + m[1] }, m[1] ]
+                    ( m[2] === '!' ? m[1] // "!" suppresses the link
+                                   : [ 'a', { href: '#fn' + m[1] }, m[1] ] )
                   ] );
         continue;
       }
@@ -973,7 +1219,7 @@
 
       // links
       if ( (boundary && (m = re_link.exec( src ))) || (m = re_link_fenced.exec( src )) ) {
-        src.advance( m[0].length );
+        src.advance( m[0] );
         var title = m[1].match( re_link_title )
           , inner = ( title ) ? m[1].slice( 0, m[1].length - title[0].length ) : m[1]
           ;
@@ -992,7 +1238,7 @@
       }
 
       // no match, move by all "uninteresting" chars
-      m = /([a-zA-Z0-9,.':]+|\s+|[^\0])/.exec( src );
+      m = /([a-zA-Z0-9,.':]+|[ \f\r\t\v\xA0\u2028\u2029]+|[^\0])/.exec( src );
       if ( m ) {
         list.add( m[0] );
       }
@@ -1013,11 +1259,11 @@
       , paragraph = function ( s, tag, pba, linebreak ) {
           tag = tag || 'p';
           var out = [];
-          s.split( /\n\n+/ ).forEach(function( bit, i ) {
+          s.split( /(?:\r?\n){2,}/ ).forEach(function( bit, i ) {
             if ( tag === 'p' && /^\s/.test( bit ) ) {
               // no-paragraphs
               // WTF?: Why does Textile not allow linebreaks in spaced lines
-              bit = bit.replace( /\n[\t ]/g, ' ' ).trim();
+              bit = bit.replace( /\r?\n[\t ]/g, ' ' ).trim();
               out = out.concat( parse_inline( bit, options ) );
             }
             else {
@@ -1031,7 +1277,7 @@
       , link_refs = {}
       , m
       ;
-    src = ribbon( src.replace( /^( *\n)+/, '' ) );
+    src = ribbon( src.replace( /^( *\r?\n)+/, '' ) );
 
     // loop
     while ( src.valueOf() ) {
@@ -1130,7 +1376,7 @@
         // I simply match them here as there is no way anyone is using nested HTML today, or if they
         // are, then this will at least output less broken HTML as redundant tags will get quoted.
 
-        // Is block tag? ... 
+        // Is block tag? ...
         if ( tag in allowed_blocktags ) {
           src.advance( m[0] );
 
@@ -1146,14 +1392,14 @@
             continue;
           }
           else { // block
-            
-            // gulp up the rest of this block... 
+
+            // gulp up the rest of this block...
             var re_end_tag = re.compile( "^(.*?)(\\s*)(</" + tag + "\\s*>)(\\s*)", 's' );
             if ( (m = re_end_tag.exec( src )) ) {
               src.advance( m[0] );
               if ( tag === 'pre' ) {
                 element.push( tail );
-                element = element.concat( parse_html( m[1].replace( /\n+$/, '' ), { 'code': 1 } ) );
+                element = element.concat( parse_html( m[1].replace( /(\r?\n)+$/, '' ), { 'code': 1 } ) );
                 if ( m[2] ) { element.push( m[2] ); }
                 list.add( element );
               }
@@ -1204,6 +1450,13 @@
         continue;
       }
 
+      // definition list
+      if ( (m = re_deflist.exec( src )) ) {
+        src.advance( m[0] );
+        list.add( parse_deflist( m[0], options ) );
+        continue;
+      }
+
       // table
       if ( (m = re_table.exec( src )) ) {
         src.advance( m[0] );
@@ -1222,7 +1475,7 @@
   }
 
 
-  // recurse the tree and swap out any "href" attributes 
+  // recurse the tree and swap out any "href" attributes
   function fix_links ( jsonml ) {
     if ( _isArray( jsonml ) ) {
       if ( jsonml[0] === 'a' ) { // found a link
