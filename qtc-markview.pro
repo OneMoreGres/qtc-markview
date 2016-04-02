@@ -13,7 +13,8 @@ SOURCES += \
     src/MarkviewEditorFactory.cpp \
     src/AdapterBase.cpp \
     src/MarkviewWidget.cpp \
-    src/WebViewFind.cpp
+    src/WebViewFind.cpp \
+    src/PreviewPage.cpp
 
 HEADERS += \
     src/Constants.h \
@@ -22,7 +23,8 @@ HEADERS += \
     src/MarkviewEditorFactory.h \
     src/AdapterBase.h \
     src/MarkviewWidget.h \
-    src/WebViewFind.h
+    src/WebViewFind.h \
+    src/PreviewPage.h
 
 TRANSLATIONS += \
     translation/QtcMarkview_ru.ts

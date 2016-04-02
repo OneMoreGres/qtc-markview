@@ -3,7 +3,7 @@
 <script src="qrc:/js/asciidoctor-all.js"></script>
 <script>
 function update (plainText) {
-  var options = Opal.hash2(['attributes'], {attributes: ['showtitle']});
+  var options = Opal.hash({safe: 0, attributes: Opal.hash({'showtitle':true, 'docdir':window.location.href})});
   var html = Opal.Asciidoctor.$convert(plainText, options);
   document.body.innerHTML = html;
 }

@@ -2,12 +2,14 @@
 #include "AdapterBase.h"
 #include "Constants.h"
 #include "WebViewFind.h"
+#include "PreviewPage.h"
 
 #include <QComboBox>
 #include <QWebEngineView>
 #include <QWebEngineSettings>
 #include <QVBoxLayout>
 #include <QToolButton>
+#include <QFileInfo>
 
 #include <aggregation/aggregate.h>
 #include <texteditor/textdocument.h>
@@ -64,6 +66,7 @@ void MarkviewWidget::changeView () {
   // Create webView and place on top of base editor (not viewport).
   if (currentAdapter_ && !webView_) {
     webView_ = new QWebEngineView (this);
+    webView_->setPage (new PreviewPage (webView_));
     webView_->setStyleSheet (QStringLiteral ("QWebEngineView {background: #FFFFFF;}"));
 #ifndef QT_DEBUG
     webView_->setContextMenuPolicy (Qt::NoContextMenu);
@@ -80,8 +83,10 @@ void MarkviewWidget::changeView () {
   }
 
   if (currentAdapter_) {
+    hide ();
     setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+    show ();
     webView_->show ();
   }
   else {
@@ -97,7 +102,8 @@ void MarkviewWidget::init () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    currentAdapter_->initView (textDocument ()->plainText (), webView_);
+    QFileInfo info (textDocument ()->filePath ().toString ());
+    currentAdapter_->initView (textDocument ()->plainText (), info.absolutePath (), webView_);
   }
 }
 
@@ -105,7 +111,8 @@ void MarkviewWidget::update () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    currentAdapter_->updateView (textDocument ()->plainText (), webView_);
+    QFileInfo info (textDocument ()->filePath ().toString ());
+    currentAdapter_->updateView (textDocument ()->plainText (), info.absolutePath (), webView_);
   }
 }
 
