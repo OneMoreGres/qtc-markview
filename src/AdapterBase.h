@@ -14,8 +14,10 @@ namespace QtcMarkview {
                      const QString htmlFileName = QString ());
         virtual ~AdapterBase ();
 
-        virtual void initView (const QString &plainText, QWebEngineView *view) const;
-        virtual void updateView (const QString &plainText, QWebEngineView *view) const;
+        virtual void initView (const QString &plainText, const QString &baseDir,
+                               QWebEngineView *view) const;
+        virtual void updateView (const QString &plainText, const QString &baseDir,
+                                 QWebEngineView *view) const;
 
         QString helpMessage () const;
         bool isHelpAvailable () const;

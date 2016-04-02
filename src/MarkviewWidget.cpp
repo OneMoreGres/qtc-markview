@@ -9,6 +9,7 @@
 #include <QWebEngineSettings>
 #include <QVBoxLayout>
 #include <QToolButton>
+#include <QFileInfo>
 
 #include <aggregation/aggregate.h>
 #include <texteditor/textdocument.h>
@@ -101,7 +102,8 @@ void MarkviewWidget::init () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    currentAdapter_->initView (textDocument ()->plainText (), webView_);
+    QFileInfo info (textDocument ()->filePath ().toString ());
+    currentAdapter_->initView (textDocument ()->plainText (), info.absolutePath (), webView_);
   }
 }
 
@@ -109,7 +111,8 @@ void MarkviewWidget::update () {
   if (currentAdapter_) {
     Q_ASSERT (webView_);
     Q_ASSERT (textDocument ());
-    currentAdapter_->updateView (textDocument ()->plainText (), webView_);
+    QFileInfo info (textDocument ()->filePath ().toString ());
+    currentAdapter_->updateView (textDocument ()->plainText (), info.absolutePath (), webView_);
   }
 }
 

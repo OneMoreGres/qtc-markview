@@ -45,7 +45,8 @@ AdapterBase::~AdapterBase () {
 
 }
 
-void AdapterBase::initView (const QString &plainText, QWebEngineView *view) const {
+void AdapterBase::initView (const QString &plainText, const QString &baseDir,
+                            QWebEngineView *view) const {
   QString html;
   if (htmlFileName_.isEmpty ()) {
     html = plainText;
@@ -54,12 +55,14 @@ void AdapterBase::initView (const QString &plainText, QWebEngineView *view) cons
     html = QString::fromLocal8Bit (readFile (htmlFileName_.toHtmlEscaped ()));
     html = html.arg (toJsString (plainText));
   }
-  view->setHtml (html);
+
+  view->setHtml (html, QUrl::fromLocalFile (baseDir + QStringLiteral ("/")));
 }
 
-void AdapterBase::updateView (const QString &plainText, QWebEngineView *view) const {
+void AdapterBase::updateView (const QString &plainText, const QString &baseDir,
+                              QWebEngineView *view) const {
   if (htmlFileName_.isEmpty ()) {
-    view->setHtml (plainText);
+    view->setHtml (plainText, QUrl::fromLocalFile (baseDir + QStringLiteral ("/")));
   }
   else {
     QString preprocessed = toJsString (plainText);
