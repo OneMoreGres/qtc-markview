@@ -15,4 +15,22 @@ cd dist
 zip -q -r ../%PLUGIN_NAME%-%VERSION%-win.zip *
 cd ..
 
-rd /Q /S dist
+del %PLUGIN_NAME%-%VERSION%-win-dep.zip
+
+mkdir dist_dep\bin
+copy /Y %BUILD_DIR%\..\Qt\libexec\QtWebEngineProcess dist_dep\bin
+
+mkdir -p dist_dep\lib\Qt\lib
+cp -P %BUILD_DIR%\..\Qt\lib\libQt5WebChannel.so* dist_dep\lib\Qt\lib
+cp -P %BUILD_DIR%\..\Qt\lib\libQt5WebEngine.so* dist_dep\lib\Qt\lib
+cp -P %BUILD_DIR%\..\Qt\lib\libQt5WebEngineCore.so* dist_dep\lib\Qt\lib
+cp -P %BUILD_DIR%\..\Qt\lib\libQt5WebEngineWidgets.so* dist_dep\lib\Qt\lib
+
+mkdir -p dist_dep\lib\Qt\resources
+cp %BUILD_DIR%\..\Qt\resources\* dist_dep\lib\Qt\resources
+
+cd dist_dep && tar czf $DEP_FILE_NAME . && cd ..
+rm -rf dist_dep
+
+
+rd \Q \S dist

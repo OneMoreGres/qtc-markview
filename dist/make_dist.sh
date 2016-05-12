@@ -22,7 +22,25 @@ function makeDist {
 
     cd dist && tar czf $FILE_NAME . && cd ..
     rm -rf dist
+
+    DEP_FILE_NAME=$QTC_DIR/$PLUGIN_NAME-$QTC_VERSION-linux-$ARCH-dep.tar.gz
+    rm -f $DEP_FILE_NAME
+
+    mkdir -p dist_dep/bin
+    cp $QTC_DIR/Qt/libexec/QtWebEngineProcess dist_dep/bin
+
+    mkdir -p dist_dep/lib/Qt/lib
+    cp -P $QTC_DIR/Qt/lib/libQt5WebChannel.so* dist_dep/lib/Qt/lib
+    cp -P $QTC_DIR/Qt/lib/libQt5WebEngine.so* dist_dep/lib/Qt/lib
+    cp -P $QTC_DIR/Qt/lib/libQt5WebEngineCore.so* dist_dep/lib/Qt/lib
+    cp -P $QTC_DIR/Qt/lib/libQt5WebEngineWidgets.so* dist_dep/lib/Qt/lib
+
+    mkdir -p dist_dep/lib/Qt/resources
+    cp $QTC_DIR/Qt/resources/* dist_dep/lib/Qt/resources
+
+    cd dist_dep && tar czf $DEP_FILE_NAME . && cd ..
+    rm -rf dist_dep
 }
 
 makeDist x64
-makeDist x86
+#makeDist x86
