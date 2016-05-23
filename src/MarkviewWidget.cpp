@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QFileInfo>
+#include <QScrollBar>
 
 #include <aggregation/aggregate.h>
 #include <texteditor/textdocument.h>
@@ -44,7 +45,7 @@ MarkviewWidget::~MarkviewWidget () {
 }
 
 void MarkviewWidget::finalizeInitialization () {
-  textDocument()->setMimeType(QLatin1String(TextEditor::Constants::C_TEXTEDITOR_MIMETYPE_TEXT));
+  textDocument ()->setMimeType (QLatin1String (TextEditor::Constants::C_TEXTEDITOR_MIMETYPE_TEXT));
 
   setupGenericHighlighter ();
   configureGenericHighlighter ();
@@ -86,12 +87,16 @@ void MarkviewWidget::changeView () {
     hide ();
     setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+    horizontalScrollBar ()->setMaximumWidth (0);
+    verticalScrollBar ()->setMaximumHeight (0);
     show ();
     webView_->show ();
   }
   else {
     setHorizontalScrollBarPolicy (Qt::ScrollBarAsNeeded);
     setVerticalScrollBarPolicy (Qt::ScrollBarAsNeeded);
+    horizontalScrollBar ()->setMaximumWidth (999);
+    verticalScrollBar ()->setMaximumHeight (999);
     if (webView_) {
       webView_->hide ();
     }
