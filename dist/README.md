@@ -1,5 +1,8 @@
 # Changelog
 
+## v 4.1.0
+- Fixed "untouchable" scrollbar.
+
 ## v 4.0.0
 - Added ability to include/load resources
 - Open links in default browser
