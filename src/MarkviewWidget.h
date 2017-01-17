@@ -4,6 +4,7 @@
 #include <texteditor/texteditor.h>
 
 class QWebEngineView;
+class QComboBox;
 
 namespace QtcMarkview {
   namespace Internal {
@@ -15,13 +16,14 @@ namespace QtcMarkview {
       Q_OBJECT
 
       public:
-        MarkviewWidget (const Adapters &adapters);
+        MarkviewWidget (Adapters &adapters);
         ~MarkviewWidget ();
 
         void finalizeInitialization ();
 
       signals:
         void helpAvailabilityChanged (bool gotHelp);
+        void isCustomEditorChanged (bool gotHelp);
 
       private slots:
         void currentAdapterChanged (const QString &newAdapterName);
@@ -29,11 +31,14 @@ namespace QtcMarkview {
         void init ();
         void update ();
         void showHelp ();
+        void addCustomEditor ();
+        void removeCustomEditor ();
 
       private:
         QWebEngineView *webView_;
+        QComboBox *adapterCombo_;
 
-        const Adapters &adapters_;
+        Adapters &adapters_;
         const AdapterBase *currentAdapter_;
         QString currentAdapterName_;
 

@@ -11,7 +11,8 @@ namespace QtcMarkview {
     class AdapterBase {
       public:
         AdapterBase (const QString helpFileName = QString (),
-                     const QString htmlFileName = QString ());
+                     const QString htmlFileName = QString (),
+                     bool isCustom = false);
         virtual ~AdapterBase ();
 
         virtual void initView (const QString &plainText, const QString &baseDir,
@@ -22,9 +23,13 @@ namespace QtcMarkview {
         QString helpMessage () const;
         bool isHelpAvailable () const;
 
+        bool isCustom () const;
+        QString htmlFileName () const;
+
       protected:
         QString helpFileName_;
         QString htmlFileName_;
+        bool isCustom_;
     };
 
   } // namespace Internal

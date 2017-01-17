@@ -4,14 +4,18 @@
 #include "AdapterBase.h"
 
 #include <QCoreApplication>
+#include <QSettings>
 
 #include <texteditor/normalindenter.h>
 #include <texteditor/textdocument.h>
+#include <coreplugin/icore.h>
 
 using namespace QtcMarkview::Internal;
 
 namespace {
   Adapters adapters;
+  const QString group = "QtcMarkview";
+  const QString field = "adapters";
 }
 
 MarkviewEditorFactory::MarkviewEditorFactory () {
@@ -29,6 +33,8 @@ MarkviewEditorFactory::MarkviewEditorFactory () {
                                                     QStringLiteral (":/html/textile.html")));
   adapters.insert (tr ("Html"), new AdapterBase (QStringLiteral (":/help/html.html")));
 
+  loadCustomAdapters ();
+
   setDocumentCreator ([]() {
     return new TextEditor::TextDocument (Constants::QTCMARKVIEW_ID);
   });
@@ -44,6 +50,39 @@ MarkviewEditorFactory::MarkviewEditorFactory () {
 }
 
 MarkviewEditorFactory::~MarkviewEditorFactory () {
+  saveCustomAdapters ();
   qDeleteAll (adapters.values ());
   adapters.clear ();
+}
+
+void MarkviewEditorFactory::loadCustomAdapters () {
+  Q_ASSERT (Core::ICore::settings () != NULL);
+  QSettings &settings = *(Core::ICore::settings ());
+  settings.beginGroup (group);
+  auto custom = settings.value (field).toString ().split (",");
+  settings.endGroup ();
+
+  for (const auto &i: custom) {
+    auto parts = i.split (":::");
+    if (parts.size () < 2) {
+      continue;
+    }
+    adapters.insert (parts[0], new AdapterBase ({}, parts[1], true));
+  }
+}
+
+void MarkviewEditorFactory::saveCustomAdapters () {
+  QStringList custom;
+  for (const auto &name: adapters.keys ()) {
+    auto adapter = adapters[name];
+    if (adapter && adapter->isCustom ()) {
+      custom << QString ("%1:::%2").arg (name, adapter->htmlFileName ());
+    }
+  }
+
+  Q_ASSERT (Core::ICore::settings () != NULL);
+  QSettings &settings = *(Core::ICore::settings ());
+  settings.beginGroup (group);
+  settings.setValue (field, custom.join (","));
+  settings.endGroup ();
 }

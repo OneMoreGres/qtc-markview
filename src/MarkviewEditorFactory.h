@@ -12,6 +12,10 @@ namespace QtcMarkview {
       public:
         MarkviewEditorFactory ();
         ~MarkviewEditorFactory ();
+
+      private:
+        void loadCustomAdapters ();
+        void saveCustomAdapters ();
     };
 
   } // namespace Internal
