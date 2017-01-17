@@ -36,8 +36,8 @@ namespace {
 
 }
 
-AdapterBase::AdapterBase (const QString helpFileName, const QString htmlFileName)
-  : helpFileName_ (helpFileName), htmlFileName_ (htmlFileName) {
+AdapterBase::AdapterBase (const QString helpFileName, const QString htmlFileName, bool isCustom)
+  : helpFileName_ (helpFileName), htmlFileName_ (htmlFileName), isCustom_ (isCustom) {
 
 }
 
@@ -82,4 +82,12 @@ QString AdapterBase::helpMessage () const {
 
 bool AdapterBase::isHelpAvailable () const {
   return !helpFileName_.isEmpty ();
+}
+
+bool AdapterBase::isCustom () const {
+  return isCustom_;
+}
+
+QString AdapterBase::htmlFileName () const {
+  return htmlFileName_;
 }
