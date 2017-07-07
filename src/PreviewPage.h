@@ -3,9 +3,8 @@
 
 #include <QWebEnginePage>
 
-class PreviewPage : public QWebEnginePage
-{
-    Q_OBJECT
+class PreviewPage : public QWebEnginePage {
+  Q_OBJECT
 
   public:
     explicit PreviewPage (QObject *parent = nullptr);
