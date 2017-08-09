@@ -25,6 +25,7 @@ Controller.prototype.TargetDirectoryPageCallback = function() {
 Controller.prototype.ComponentSelectionPageCallback = function() {
   var widget = gui.currentPageWidget();
   widget.deselectAll();
+  widget.selectComponent('qt.591.qtwebengine');
   widget.selectComponent('qt.591.clang_64');
   gui.clickButton(buttons.NextButton);
 }
