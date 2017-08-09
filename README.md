@@ -3,7 +3,7 @@
 ## Introduction
 Plugin performs preview of documents written in some markup languages.
 
-![Screen](dist/screen.png?raw=true)
+![Screen](util/screen.png?raw=true)
 
 ## Supported languages
 * [Asciidoctor](http://asciidoctor.org/)
