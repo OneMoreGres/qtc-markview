@@ -35,14 +35,14 @@ cd ..
 
 rd /Q /S dist_dep
 mkdir dist_dep\bin
-copy /Y %BUILD_DIR%\..\Qt\bin\QtWebEngineProcess.exe dist_dep\bin
-copy /Y %BUILD_DIR%\..\Qt\bin\Qt5WebChannel.dll dist_dep\bin
-copy /Y %BUILD_DIR%\..\Qt\bin\Qt5WebEngine.dll dist_dep\bin
-copy /Y %BUILD_DIR%\..\Qt\bin\Qt5WebEngineCore.dll dist_dep\bin
-copy /Y %BUILD_DIR%\..\Qt\bin\Qt5WebEngineWidgets.dll dist_dep\bin
+copy /Y qtcreator-latest\Qt\bin\QtWebEngineProcess.exe dist_dep\bin
+copy /Y qtcreator-latest\Qt\bin\Qt5WebChannel.dll dist_dep\bin
+copy /Y qtcreator-latest\Qt\bin\Qt5WebEngine.dll dist_dep\bin
+copy /Y qtcreator-latest\Qt\bin\Qt5WebEngineCore.dll dist_dep\bin
+copy /Y qtcreator-latest\Qt\bin\Qt5WebEngineWidgets.dll dist_dep\bin
 
 mkdir dist_dep\bin\resources
-copy /Y %BUILD_DIR%\..\Qt\resources dist_dep\bin\resources
+copy /Y qtcreator-latest\Qt\resources dist_dep\bin\resources
 
 if exist %PLUGIN_NAME%-%VERSION%-win-dep.zip del /Q %PLUGIN_NAME%-%VERSION%-win-dep.zip
 cd dist_dep
