@@ -4,27 +4,20 @@ VERSION_SUFFIX = ""
 
 include(paths.pri)
 
-QT += webenginewidgets
-
 # QtcMarkview files
 
 SOURCES += \
-    src/QtcMarkviewPlugin.cpp \
-    src/MarkviewEditorFactory.cpp \
-    src/AdapterBase.cpp \
-    src/MarkviewWidget.cpp \
-    src/WebViewFind.cpp \
-    src/PreviewPage.cpp
+    src/markdownhighlighter.cpp \
+    src/markdowntextedit.cpp \
+    src/markdowneditorfactory.cpp \
+    src/markviewplugin.cpp
 
 HEADERS += \
-    src/Constants.h \
-    src/PluginGlobal.h \
-    src/QtcMarkviewPlugin.h \
-    src/MarkviewEditorFactory.h \
-    src/AdapterBase.h \
-    src/MarkviewWidget.h \
-    src/WebViewFind.h \
-    src/PreviewPage.h
+    src/constants.h \
+    src/markdownhighlighter.h \
+    src/markdowntextedit.h \
+    src/markdowneditorfactory.h \
+    src/markviewplugin.h
 
 TRANSLATIONS += \
     translation/QtcMarkview_ru.ts
@@ -57,7 +50,3 @@ QTC_PLUGIN_RECOMMENDS += \
 ###### End _dependencies.pri contents ######
 
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
-
-RESOURCES += \
-    resources.qrc
-

@@ -1,6 +1,6 @@
-#include "QtcMarkviewPlugin.h"
-#include "Constants.h"
-#include "MarkviewEditorFactory.h"
+#include "markviewplugin.h"
+#include "constants.h"
+#include "markdowneditorfactory.h"
 
 #include <QCoreApplication>
 #include <QTranslator>
@@ -11,17 +11,17 @@
 
 using namespace QtcMarkview::Internal;
 
-QtcMarkviewPlugin::QtcMarkviewPlugin () :
+MarkviewPlugin::MarkviewPlugin () :
   IPlugin () {
   // Create your members
 }
 
-QtcMarkviewPlugin::~QtcMarkviewPlugin () {
+MarkviewPlugin::~MarkviewPlugin () {
   // Unregister objects from the plugin manager's object pool
   // Delete members
 }
 
-bool QtcMarkviewPlugin::initialize (const QStringList &arguments, QString *errorString) {
+bool MarkviewPlugin::initialize (const QStringList &arguments, QString *errorString) {
   // Register objects in the plugin manager's object pool
   // Load settings
   // Add actions to menus
@@ -34,12 +34,12 @@ bool QtcMarkviewPlugin::initialize (const QStringList &arguments, QString *error
 
   initLanguage ();
 
-  addAutoReleasedObject (new MarkviewEditorFactory);
+  new MarkdownEditorFactory (this);
 
   return true;
 }
 
-void QtcMarkviewPlugin::initLanguage () {
+void MarkviewPlugin::initLanguage () {
   const QString &language = Core::ICore::userInterfaceLanguage ();
   if (!language.isEmpty ()) {
     QStringList paths;
@@ -55,13 +55,13 @@ void QtcMarkviewPlugin::initLanguage () {
   }
 }
 
-void QtcMarkviewPlugin::extensionsInitialized () {
+void MarkviewPlugin::extensionsInitialized () {
   // Retrieve objects from the plugin manager's object pool
   // In the extensionsInitialized function, a plugin can be sure that all
   // plugins that depend on it are completely initialized.
 }
 
-ExtensionSystem::IPlugin::ShutdownFlag QtcMarkviewPlugin::aboutToShutdown () {
+ExtensionSystem::IPlugin::ShutdownFlag MarkviewPlugin::aboutToShutdown () {
   // Save settings
   // Disconnect from signals that are not needed during shutdown
   // Hide UI (if you add UI that is not in the main window directly)
