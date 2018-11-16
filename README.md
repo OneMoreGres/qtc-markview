@@ -9,8 +9,7 @@ Plugin performs preview of documents written in some markup languages.
 * [Markdown](http://daringfireball.net/projects/markdown/)
 
 ## Downloads
-Binaries can be downloaded [here](https://sourceforge.net/projects/qtc-markview/files/ "Sourceforge")
-or from github releases.
+Binaries can be downloaded from [github releases](https://github.com/OneMoreGres/qtc-markview/releases).
 
 ## Installation
 IMPORTANT: plugin's version must match Qt Creator's version (difference in last digit is acceptable)
