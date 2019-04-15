@@ -26,8 +26,8 @@ namespace QtcMarkview {
       setEditorWidgetCreator ([]() {
         return new QMarkdownTextEdit;
       });
-      setIndenterCreator ([]() {
-        return new TextEditor::NormalIndenter;
+      setIndenterCreator ([](QTextDocument *doc) {
+        return new TextEditor::NormalIndenter (doc);
       });
       //      setSyntaxHighlighterCreator()
     }
