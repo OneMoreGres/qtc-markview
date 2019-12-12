@@ -703,11 +703,9 @@ QString QMarkdownTextEdit::getMarkdownUrlAtPosition (
   // get a map of parsed markdown urls with their link texts as key
   QMap<QString, QString> urlMap = parseMarkdownUrlsFromText (text);
 
-  QMapIterator<QString, QString> iterator (urlMap);
-  while (iterator.hasNext ()) {
-    iterator.next ();
-    QString linkText = iterator.key ();
-    QString urlString = iterator.value ();
+  for (auto it = urlMap.cbegin(), end = urlMap.cend(); it != end; ++it) {
+    QString linkText = it.key ();
+    QString urlString = it.value ();
 
     int foundPositionStart = text.indexOf (linkText);
 
