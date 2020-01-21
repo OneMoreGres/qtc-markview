@@ -1,5 +1,7 @@
 # Qt Creator markup plugin
 
+![build status](https://github.com/OneMoreGres/qtc-markview/workflows/Plugin%20build/badge.svg)
+
 ## Introduction
 Plugin performs preview of documents written in some markup languages.
 
