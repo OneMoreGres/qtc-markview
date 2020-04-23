@@ -10,7 +10,7 @@ namespace QtcMarkview {
       Q_OBJECT
 
       public:
-        explicit MarkdownEditorFactory (QObject *parent = nullptr);
+        explicit MarkdownEditorFactory ();
     };
 
   } // namespace Internal
