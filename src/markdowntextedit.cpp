@@ -99,9 +99,8 @@ bool QMarkdownTextEdit::eventFilter (QObject *obj, QEvent *event) {
       viewPort->setCursor (Qt::PointingHandCursor);
     }
 
-    // disallow keys if text edit hasn't focus
     if (!this->hasFocus ()) {
-      return true;
+      return false;
     }
 
     if ((keyEvent->key () == Qt::Key_Tab) ||
@@ -227,7 +226,7 @@ bool QMarkdownTextEdit::eventFilter (QObject *obj, QEvent *event) {
     }
   }
 
-  return QPlainTextEdit::eventFilter (obj, event);
+  return TextEditorWidget::eventFilter (obj, event);
 }
 
 /**
