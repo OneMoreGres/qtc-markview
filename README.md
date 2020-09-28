@@ -30,4 +30,4 @@ IMPORTANT: plugin's version must match Qt Creator's version (difference in last 
 3. Enable plugin in Help->Modules menu.
 
 ## More info
-Additional information can be obtained [here](http://gres.biz/qtc-markview/ "Homepage") (in russian)
+Additional information can be obtained [here](https://qtcreator.gres.biz/page/markview/ "Homepage") (in russian)
